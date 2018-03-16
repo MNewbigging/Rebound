@@ -22,31 +22,11 @@ public:
 	float mBulletLifeSpan			 = 2.5f;
 	bool mFiredRecently				 = false;
 
-	std::vector<Bullet> mBullets;
+	
 
-	// Use bullet pool to avoid new/delete operations at runtime
-	void SetupBullets(vec2 offScreenPos, int maxBulletCount, float bulletSize, float bulletSpeed)
-	{
-		for (int i = 0; i < maxBulletCount; i++)
-		{
-			//Entity *bptr;
-			Bullet bullet;
-			//bptr = &bullet;
 
-			// Make sure to spread out each bullet - each has unqiue place to reset to
-			bullet.mBulletPoolPos = vec2(offScreenPos.x + (i * bulletSize * 2), offScreenPos.y);
-			// Set default bullet speed
-			bullet.mSpeed = bulletSpeed;
-			// Set radius
-			bullet.mRadius = bulletSize;
-			// Add to pool
-			mBullets.push_back(bullet);
-		}
 
-		std::cout << " ";
-	}
-
-	void Update(float dt)
+	void Update(std::vector<Bullet> &bullets, float dt)
 	{
 		mVelocity = vec2(0.0f, 0.0f);
 
@@ -95,18 +75,18 @@ public:
 				for (int i = 0; i < mBulletsFiredLimit; i++)
 				{
 					// Look for inactive bullet to fire - if there aren't any then nothing will happen
-					if (!mBullets[i].mActive)
+					if (!bullets[i].mActive)
 					{
 						// Reset cooldown timer to prevent firing again immediately
 						mBulletFireCooldown = mBulletFireDelay;
 
 						// Activate the next available bullet
-						mBullets[i].mActive = true;
+						bullets[i].mActive = true;
 
 						// Set movement vars
-						mBullets[i].mLifetime = mBulletLifeSpan;
-						mBullets[i].mPos = mPos;
-						mBullets[i].mVelocity = mFacingDir * mBullets[i].mSpeed; // Store bullet speed in player? 
+						bullets[i].mLifetime = mBulletLifeSpan;
+						bullets[i].mPos = mPos;
+						bullets[i].mVelocity = mFacingDir * bullets[i].mSpeed; // Store bullet speed in player? 
 
 						// Stop looking for other active bullets
 						break;
@@ -115,11 +95,7 @@ public:
 				}
 			}
 		} // end if mouse left down
-
-
-
-
-		
+	
 	}
 
 	void Render(sf::RenderWindow* renderWin, Resources* resources)

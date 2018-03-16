@@ -24,13 +24,13 @@ struct Gamestate
 	Player mPlayer;
 
 	//vector<Entity*> mEnemies;
-    std::vector<Entity*> mBullets;
+    std::vector<Bullet> mBullets;
 
 	// General game setup - called once before main loop
 	void SetupGame(vec2 windowSize)
 	{
 		SetupPlayer();
-		mPlayer.SetupBullets(windowSize, mMaxBulletCount, mBulletSize, mBulletSpeed);
+		SetupBullets(windowSize);
 	}
 
 private:
@@ -46,6 +46,26 @@ private:
 		mPlayer.mPos = vec2(0.0f, 0.0f);
 	}
 
+	// Use bullet pool to avoid new/delete operations at runtime
+	void SetupBullets(vec2 offScreenPos)
+	{
+		for (int i = 0; i < mMaxBulletCount; i++)
+		{
+			//Entity *bptr;
+			Bullet bullet;
+			//bptr = &bullet;
 
+			// Make sure to spread out each bullet - each has unqiue place to reset to
+			bullet.mBulletPoolPos = vec2(offScreenPos.x + (i * mBulletSize * 2), offScreenPos.y);
+			// Set default bullet speed
+			bullet.mSpeed = mBulletSpeed;
+			// Set radius
+			bullet.mRadius = mBulletSize;
+			// Add to pool
+			mBullets.push_back(bullet);
+		}
+
+		std::cout << " ";
+	}
 	
 };

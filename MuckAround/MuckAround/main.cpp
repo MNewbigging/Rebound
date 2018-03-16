@@ -21,9 +21,9 @@ typedef sf::Vector2f vec2;
 void Update(Gamestate* gameState, float dt)
 {
 	// Update player
-	gameState->mPlayer.Update(dt);
+	gameState->mPlayer.Update(gameState->mBullets, dt);
 	// Update bullets
-	for (auto &b : gameState->mPlayer.mBullets)
+	for (auto &b : gameState->mBullets)
 	{
 		b.Update(dt);
 	}
@@ -36,7 +36,7 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 	// Render player
 	gameState->mPlayer.Render(renderWin, resources);
 	// Render bullets
-	for (auto &b : gameState->mPlayer.mBullets)
+	for (auto &b : gameState->mBullets)
 	{
 		b.Render(renderWin);
 	}
