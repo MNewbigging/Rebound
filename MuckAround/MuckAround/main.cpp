@@ -22,6 +22,11 @@ void Update(Gamestate* gameState, float dt)
 {
 	// Update player
 	gameState->mPlayer.Update(dt);
+	// Update bullets
+	for (auto &b : gameState->mPlayer.mBullets)
+	{
+		b.Update(dt);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -30,6 +35,11 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 {
 	// Render player
 	gameState->mPlayer.Render(renderWin, resources);
+	// Render bullets
+	for (auto &b : gameState->mPlayer.mBullets)
+	{
+		b.Render(renderWin);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -51,7 +61,9 @@ int main()
 
 	// Initiate gamestate
 	Gamestate gameState = {};
-	// Create a player
+	
+	// Setup game vars
+	gameState.SetupGame(windowSize);
 	
 
 	// Setup resources
