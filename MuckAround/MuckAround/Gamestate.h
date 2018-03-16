@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Player.h"
-
+#include "Obstacles.h"
 
 
 typedef sf::Vector2f vec2;
@@ -25,12 +25,14 @@ struct Gamestate
 
 	//vector<Entity*> mEnemies;
     std::vector<Bullet> mBullets;
+	std::vector<Obstacle> mObstacles;
 
 	// General game setup - called once before main loop
 	void SetupGame(vec2 windowSize)
 	{
 		SetupPlayer();
 		SetupBullets(windowSize);
+		SetupObstacles();
 	}
 
 private:
@@ -68,4 +70,18 @@ private:
 		std::cout << " ";
 	}
 	
+	void SetupObstacles()
+	{
+		Obstacle obs;
+
+		obs.mPos = vec2(0.0f, 0.0f);
+		obs.mSize = vec2(100.0f, 100.0f);
+		
+		
+
+		obs.mColour = sf::Color::Green;
+
+		mObstacles.push_back(obs);
+	}
+
 };

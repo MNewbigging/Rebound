@@ -157,6 +157,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="HelperFunctions.h" />
+    <ClInclude Include="Obstacles.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="stdafx.h" />

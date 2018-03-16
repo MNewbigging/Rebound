@@ -26,7 +26,10 @@ void Update(Gamestate* gameState, float dt)
 	for (auto &b : gameState->mBullets)
 	{
 		b.Update(dt);
+		// Apply collision detection/response
+		b.DetectCollisions(gameState->mObstacles, dt);
 	}
+	
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -39,6 +42,11 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 	for (auto &b : gameState->mBullets)
 	{
 		b.Render(renderWin);
+	}
+	// Render obstacles
+	for (auto o : gameState->mObstacles)
+	{
+		o.Render(renderWin);
 	}
 }
 
@@ -64,6 +72,8 @@ int main()
 	
 	// Setup game vars
 	gameState.SetupGame(windowSize);
+	
+	
 	
 
 	// Setup resources
@@ -100,6 +110,7 @@ int main()
 
 		// Render entities
 		Render(&gameState, &window, &resources);
+
 
 		window.display();
 
