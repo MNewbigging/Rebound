@@ -4,24 +4,17 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <iostream>
 
-
-#include "Entity.h"
-#include "Enemies.h"
-#include "Player.h"
+#include "Resources.h"
+#include "Gamestate.h"
 
 
 using namespace std;
 
 typedef sf::Vector2f vec2;
 
-struct Gamestate
-{
-	Player mPlayer;
 
-	vector<Entity*> mEnemies;
-	vector<Entity*> mBullets;
-};
 
 ///////////////////////////////////////////////////////////////////
 
@@ -33,10 +26,10 @@ void Update(Gamestate* gameState, float dt)
 
 ///////////////////////////////////////////////////////////////////
 
-void Render(Gamestate* gameState, sf::RenderWindow* renderWin)
+void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resources)
 {
 	// Render player
-	gameState->mPlayer.Render(renderWin);
+	gameState->mPlayer.Render(renderWin, resources);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -58,7 +51,17 @@ int main()
 
 	// Initiate gamestate
 	Gamestate gameState = {};
+	// Create a player
+	
 
+	// Setup resources
+	Resources resources;
+	if (!resources.LoadResources())
+	{
+		cout << "Failed to load resources!\n";
+
+		return -1;
+	}
 
 	while (window.isOpen())
 	{
@@ -77,9 +80,14 @@ int main()
 
 		window.clear();
 		
+		// Update mouse position
+		gameState.mPlayer.mMousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+		// Update entities
 		Update(&gameState, frameTime.asSeconds());
 
-		Render(&gameState, &window);
+		// Render entities
+		Render(&gameState, &window, &resources);
 
 		window.display();
 

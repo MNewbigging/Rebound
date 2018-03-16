@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML\Graphics.hpp>
+
 #include "Entity.h"
 #include "HelperFunctions.h"
 
@@ -9,6 +10,9 @@ typedef sf::Vector2f vec2;
 class Player : public Entity
 {
 public:
+	vec2 mMousePos  = vec2(0.0f, 0.0f);
+	vec2 mFacingDir = vec2(0.0f, 0.0f);
+	
 
 	void Update(float dt)
 	{
@@ -40,16 +44,31 @@ public:
 			mVelocity = Normalize(mVelocity);
 		}
 
+		// Update position based on velocity, speed, delta time
 		mPos += mVelocity * mSpeed * dt;
+
+		// Rotate player to face mouse
+		vec2 playerToMouse = mMousePos - mPos;
+		mFacingDir = Normalize(playerToMouse);
+
 	}
 
-	void Render(sf::RenderWindow* renderWin)
+	void Render(sf::RenderWindow* renderWin, Resources* resources)
 	{
-		sf::CircleShape playerCircle(30.0f);
-		playerCircle.setFillColor(sf::Color::Green);
-		playerCircle.setOrigin(15.0f, 15.0f);
-		playerCircle.setPosition(mPos);
+		// Grab player sprite texture from resources
+		sf::Sprite playerSprite(resources->mPlayerTex);
 
-		renderWin->draw(playerCircle);
+		// Set origin to center (move by half width/height of texture)
+		playerSprite.setOrigin((vec2)resources->mPlayerTex.getSize() * 0.5f);
+
+		// Set position
+		playerSprite.setPosition(mPos);
+		
+		// Set rotation
+		playerSprite.setRotation(RadiansToDegrees(ToAngle(mFacingDir)));
+
+		// Draw
+		renderWin->draw(playerSprite);
+
 	}
 };
