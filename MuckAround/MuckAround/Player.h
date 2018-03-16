@@ -15,11 +15,11 @@ class Player : public Entity
 public:
 	vec2 mMousePos					 = vec2(0.0f, 0.0f);
 	vec2 mFacingDir					 = vec2(0.0f, 0.0f);
+	// Bullet variables
 	float mBulletFireCooldown	     = 0.0f;
-	const float mBulletFireDelay     = 0.1f;
+	const float mBulletFireDelay     = 0.2f;
 	int mBulletsFiredLimit			 = 3;
-	int mBulletsFiredCurrently		 = 0;
-	float mBulletLifeSpan			 = 1.5f;
+	float mBulletLifeSpan			 = 2.5f;
 	bool mFiredRecently				 = false;
 
 	std::vector<Bullet> mBullets;
@@ -91,24 +91,30 @@ public:
 			// If cooldown allows another bullet to be fired
 			if (mBulletFireCooldown <= 0.0f)
 			{
-				// And there are bullets available to fire
-				if (mBulletsFiredCurrently < mBulletsFiredLimit)
+				// Loop through bullets to find one available to fire
+				for (int i = 0; i < mBulletsFiredLimit; i++)
 				{
-					// Reset cooldown timer to prevent firing again immediately
-					mBulletFireCooldown = mBulletFireDelay;
+					// Look for inactive bullet to fire - if there aren't any then nothing will happen
+					if (!mBullets[i].mActive)
+					{
+						// Reset cooldown timer to prevent firing again immediately
+						mBulletFireCooldown = mBulletFireDelay;
 
-					// Activate the next available bullet
-					mBullets[mBulletsFiredCurrently].mActive = true;
-					
-					// Set movement vars
-					mBullets[mBulletsFiredCurrently].mLifetime = mBulletLifeSpan;
-					mBullets[mBulletsFiredCurrently].mPos = mPos;
-					mBullets[mBulletsFiredCurrently].mVelocity = mFacingDir * mBullets[mBulletsFiredCurrently].mSpeed; // Store bullet speed in player? 
-					
+						// Activate the next available bullet
+						mBullets[i].mActive = true;
 
+						// Set movement vars
+						mBullets[i].mLifetime = mBulletLifeSpan;
+						mBullets[i].mPos = mPos;
+						mBullets[i].mVelocity = mFacingDir * mBullets[i].mSpeed; // Store bullet speed in player? 
+
+						// Stop looking for other active bullets
+						break;
+					}
+					// else - no bullets available (sfx?)
 				}
 			}
-		}
+		} // end if mouse left down
 
 
 
