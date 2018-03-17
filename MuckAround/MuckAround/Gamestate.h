@@ -58,7 +58,7 @@ private:
 			//bptr = &bullet;
 
 			// Make sure to spread out each bullet - each has unqiue place to reset to
-			bullet.mBulletPoolPos = vec2(offScreenPos.x + (i * mBulletSize * 2), offScreenPos.y);
+			bullet.mBulletPoolPos = vec2(offScreenPos.x + (i * mBulletSize * 2), offScreenPos.y + 100);
 			// Set default bullet speed
 			bullet.mSpeed = mBulletSpeed;
 			// Set radius
@@ -66,8 +66,6 @@ private:
 			// Add to pool
 			mBullets.push_back(bullet);
 		}
-
-		std::cout << " ";
 	}
 	
 	void SetupObstacles()
@@ -75,10 +73,7 @@ private:
 		Obstacle obs;
 
 		obs.mPos = vec2(0.0f, 0.0f);
-		obs.mSize = vec2(100.0f, 100.0f);
-		
-		
-
+		obs.mRadius = 40.0f;
 		obs.mColour = sf::Color::Green;
 
 		mObstacles.push_back(obs);

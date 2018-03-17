@@ -8,23 +8,24 @@ class Obstacle
 {
 public:
 
-	sf::IntRect mRectangle;
-
 	vec2 mPos		= vec2(0.0f, 0.0f);
-	vec2 mSize	    = vec2(0.0f, 0.0f);
+	
+	float mRadius	= 0.0f;
 
-	sf::Color mColour = sf::Color::White;
+	sf::Color mColour;
 
 	void Render(sf::RenderWindow* renderWin)
 	{
-		sf::RectangleShape rectShape(mSize);
+		
+		sf::CircleShape circleShape(mRadius);
 
-		rectShape.setFillColor(mColour);
+		circleShape.setFillColor(mColour);
 
-		rectShape.setOrigin(mSize / 2.0f);
+		circleShape.setOrigin(mRadius, mRadius);
 
-		rectShape.setPosition(mPos);
+		circleShape.setPosition(mPos);
 
-		renderWin->draw(rectShape);
+		renderWin->draw(circleShape);
+
 	}
 };

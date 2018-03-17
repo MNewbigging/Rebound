@@ -11,6 +11,8 @@ public:
 	
 	float mLastHit = 0.0f;
 
+	sf::Color color = sf::Color::Red;
+
 	void Update()
 	{
 		

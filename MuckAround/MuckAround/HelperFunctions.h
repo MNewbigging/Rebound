@@ -74,3 +74,53 @@ vec2 Reflect(vec2 v, vec2 n)
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+bool CircleToCircleIntersection(vec2 c1, vec2 c2, float r1, float r2)
+{
+	float xDistance = c1.x - c2.x;
+	float yDistance = c1.y - c2.y;
+	float radii = r1 + r2;
+	return xDistance * xDistance + yDistance * yDistance <= radii * radii;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// Test intersection between a line and circle
+bool LineToCircleIntersection(vec2 p1, vec2 p2, vec2 circleCenter, float circleRadius)
+{
+	vec2 d = p2 - p1;
+	vec2 f = circleCenter - p1;
+
+	// find the closest point between the line and the circle center
+	vec2 du = Normalize(d);
+	float proj = Dot(f, du);
+
+	vec2 closest;
+
+	if (proj < 0.0f)
+	{
+		closest = p1;
+	}
+	else if (proj > Length(d))
+	{
+		closest = p2;
+	}
+	else
+	{
+		vec2 projV = du * proj;
+		closest = projV + p1;
+	}
+
+	vec2 closestDiff = circleCenter - closest;
+	float closestLen = Length(closestDiff);
+
+	if (closestLen > circleRadius)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////
+

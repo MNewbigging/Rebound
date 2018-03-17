@@ -14,7 +14,7 @@ using namespace std;
 
 typedef sf::Vector2f vec2;
 
-
+static const vec2 sWindowSize = vec2(1280.0f, 720.0f);
 
 ///////////////////////////////////////////////////////////////////
 
@@ -27,7 +27,7 @@ void Update(Gamestate* gameState, float dt)
 	{
 		b.Update(dt);
 		// Apply collision detection/response
-		b.DetectCollisions(gameState->mObstacles, dt);
+		b.DetectCollisions(gameState->mObstacles, sWindowSize, dt);
 	}
 	
 }
@@ -54,14 +54,14 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 
 int main()
 {
-	vec2 windowSize = vec2(1280.0f, 720.0f);
+	
 
 
-	sf::RenderWindow window(sf::VideoMode((uint32_t)windowSize.x, (uint32_t)windowSize.y), "Bouncy Bullets");
+	sf::RenderWindow window(sf::VideoMode((uint32_t)sWindowSize.x, (uint32_t)sWindowSize.y), "Rebound");
 	window.setVerticalSyncEnabled(true);
 	
 	// This sets origin to center of screen
-	sf::View view(vec2(0.0f, 0.0f), windowSize);
+	sf::View view(vec2(0.0f, 0.0f), sWindowSize);
 	window.setView(view);
 
 	// Tracks time between frames (dt)
@@ -71,7 +71,7 @@ int main()
 	Gamestate gameState = {};
 	
 	// Setup game vars
-	gameState.SetupGame(windowSize);
+	gameState.SetupGame(sWindowSize);
 	
 	
 	

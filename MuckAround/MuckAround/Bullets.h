@@ -19,10 +19,12 @@ public:
 	bool mCanDamage		 = false;
 	// Off screen position whilst inactive
 	vec2 mBulletPoolPos  = vec2(0.0f, 0.0f);
+
+
 	// Bullet decay
 	float mLifetime				= 0.0f;
 	
-
+	int count = 0;
 
 	// Since using bullet pool; when not fired/alive move off screen and reset
 	void MoveToBulletPool()
@@ -64,37 +66,65 @@ public:
 	// Draw to window
 	void Render(sf::RenderWindow* renderWin)
 	{
-		sf::CircleShape bulletCircle(10.0f);
-		bulletCircle.setOrigin(5.0f, 5.0f);
+		sf::CircleShape bulletCircle(mRadius);
+		bulletCircle.setOrigin(mRadius / 2, mRadius / 2);
 		bulletCircle.setPosition(mPos);
 		renderWin->draw(bulletCircle);	
 	}
 	
-	
-	void DetectCollisions(std::vector<Obstacle> obstacles, float dt)
+	// Obstacles, window edges
+	void DetectCollisions(std::vector<Obstacle> obstacles, vec2 winSize, float dt)
 	{
-		// Print to console if rectangle was hit
-		for (auto obs : obstacles)
+		// Only test for cols if bullet is active
+		if (mActive)
 		{
-			// Int rects start top left, obs has central origin
-			vec2 pos = vec2(obs.mPos.x - (obs.mSize.x / 2.0f), obs.mPos.y - (obs.mSize.y / 2.0f));
-			sf::IntRect r(pos.x, pos.y, obs.mSize.x, obs.mSize.y);
-
-
-			// TODO - check with point radius length away down dir vector			
-			if (r.contains((int)mPos.x, (int)mPos.y))
+			// Test against obstacles
+			for (auto &obs : obstacles)
 			{
-				std::cout << " bullets hit" << std::endl;
-				
-				// Find collision normal
-				vec2 colNormal = Normalize(obs.mPos - mPos);
+				if (CircleToCircleIntersection(mPos, obs.mPos, mRadius, obs.mRadius))
+				{
+					// Find collision normal
+					vec2 colNormal = Normalize(obs.mPos - mPos);
+					// Reflect around this normal
+					mVelocity = Reflect(mVelocity, colNormal);
+				}
+			}
 
+			// Test against edge of screen (should bounce inwards as if there was a wall)
+			if (mPos.x + mRadius > winSize.x / 2)
+			{
+				// Move away from collision point
+				mPos.x = (winSize.x / 2) - mRadius;
+				// Normal points to left
+				vec2 colNormal = vec2(-1.0f, 0.0f);
+				// Reflect
 				mVelocity = Reflect(mVelocity, colNormal);
-
-				mPos += mVelocity * dt;
-
+			}
+			else if (mPos.x - mRadius < -(winSize.x / 2))
+			{
+				// Move away from collision
+				mPos.x = -(winSize.x / 2) + mRadius;
+				// Normal points to right
+				vec2 colNormal = vec2(1.0f, 0.0f);
+				// Reflect
+				mVelocity = Reflect(mVelocity, colNormal);
+			}
+			// Again for y
+			if (mPos.y + mRadius > winSize.y / 2)
+			{
+				mPos.y = (winSize.y / 2) - mRadius;
+				vec2 colNormal = vec2(0.0f, 1.0f);
+				mVelocity = Reflect(mVelocity, colNormal);
+			}
+			else if (mPos.y - mRadius < -(winSize.y / 2))
+			{
+				mPos.y = -(winSize.y / 2) + mRadius;
+				vec2 colNormal = vec2(0.0f, -1.0f);
+				mVelocity = Reflect(mVelocity, colNormal);
 			}
 		}
+		
+
 	}
 
 
