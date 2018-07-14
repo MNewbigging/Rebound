@@ -8,13 +8,23 @@ class Obstacle
 {
 public:
 
-	vec2 mPos		= vec2(0.0f, 0.0f);
-	
-	float mRadius	= 0.0f;
+	int mType;
 
+	vec2 mPos		    = vec2(0.0f, 0.0f);
+	
 	sf::Color mColour;
 
-	void Render(sf::RenderWindow* renderWin)
+	virtual void Render(sf::RenderWindow* renderWin) = 0;
+};
+
+class CircleObstacle : public Obstacle
+{
+public:
+
+	float mRadius = 0.0f;
+
+
+	virtual void Render(sf::RenderWindow* renderWin)
 	{
 		
 		sf::CircleShape circleShape(mRadius);
@@ -26,6 +36,14 @@ public:
 		circleShape.setPosition(mPos);
 
 		renderWin->draw(circleShape);
+	}
+};
 
+class RectangleObstacle : public Obstacle
+{
+public:
+	virtual void Render(sf::RenderWindow* renderWin)
+	{
+		
 	}
 };

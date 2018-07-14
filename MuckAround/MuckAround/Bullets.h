@@ -19,12 +19,11 @@ public:
 	bool mCanDamage		 = false;
 	// Off screen position whilst inactive
 	vec2 mBulletPoolPos  = vec2(0.0f, 0.0f);
-
-
 	// Bullet decay
-	float mLifetime				= 0.0f;
+	float mLifetime		 = 0.0f;
+	// Bullet damage
+	float mDamage		 = 25.0f;
 	
-	int count = 0;
 
 	// Since using bullet pool; when not fired/alive move off screen and reset
 	void MoveToBulletPool()
@@ -52,15 +51,8 @@ public:
 			{
 				// Calculate next position of bullet
 				mPos += mVelocity * dt;
-
 			}
 		}
-		// Otherwise this bullet is inactive, keep it off screen
-		else
-		{
-			MoveToBulletPool();
-		}
-
 	}
 
 	// Draw to window
@@ -73,7 +65,7 @@ public:
 	}
 	
 	// Obstacles, window edges
-	void DetectCollisions(std::vector<Obstacle> obstacles, vec2 winSize, float dt)
+	void DetectCollisions(std::vector<Obstacle*> obstacles, vec2 winSize)
 	{
 		// Only test for cols if bullet is active
 		if (mActive)
@@ -81,13 +73,30 @@ public:
 			// Test against obstacles
 			for (auto &obs : obstacles)
 			{
-				if (CircleToCircleIntersection(mPos, obs.mPos, mRadius, obs.mRadius))
+				// Actions depend on this obstacle's derived type
+				switch (obs->mType)
 				{
-					// Find collision normal
-					vec2 colNormal = Normalize(obs.mPos - mPos);
-					// Reflect around this normal
-					mVelocity = Reflect(mVelocity, colNormal);
+				// Circle obstacle
+				case 1:
+				{
+					// Cast obs to circle type
+					CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
+					if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+					{
+						// Find collision normal
+						vec2 colNormal = Normalize(circleObs->mPos - mPos);
+						// Reflect around this normal
+						mVelocity = Reflect(mVelocity, colNormal);
+						// Bullet has collided with something
+						mCanDamage = true;
+					}
+					break;
+				}		
+				default:
+					break;
 				}
+
+				
 			}
 
 			// Test against edge of screen (should bounce inwards as if there was a wall)
@@ -99,6 +108,8 @@ public:
 				vec2 colNormal = vec2(-1.0f, 0.0f);
 				// Reflect
 				mVelocity = Reflect(mVelocity, colNormal);
+				// Bullet has collided with something
+				mCanDamage = true;
 			}
 			else if (mPos.x - mRadius < -(winSize.x / 2))
 			{
@@ -108,6 +119,8 @@ public:
 				vec2 colNormal = vec2(1.0f, 0.0f);
 				// Reflect
 				mVelocity = Reflect(mVelocity, colNormal);
+				// Bullet has collided with something
+				mCanDamage = true;
 			}
 			// Again for y
 			if (mPos.y + mRadius > winSize.y / 2)
@@ -115,17 +128,19 @@ public:
 				mPos.y = (winSize.y / 2) - mRadius;
 				vec2 colNormal = vec2(0.0f, 1.0f);
 				mVelocity = Reflect(mVelocity, colNormal);
+				// Bullet has collided with something
+				mCanDamage = true;
 			}
 			else if (mPos.y - mRadius < -(winSize.y / 2))
 			{
 				mPos.y = -(winSize.y / 2) + mRadius;
 				vec2 colNormal = vec2(0.0f, -1.0f);
 				mVelocity = Reflect(mVelocity, colNormal);
+				// Bullet has collided with something
+				mCanDamage = true;
 			}
-		}
-		
-
-	}
+		} // end if active
+	} // end detect cols
 
 
 };

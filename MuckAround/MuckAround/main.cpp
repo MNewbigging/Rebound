@@ -22,12 +22,22 @@ void Update(Gamestate* gameState, float dt)
 {
 	// Update player
 	gameState->mPlayer.Update(gameState->mBullets, dt);
+	// Check for player collisions
+	gameState->mPlayer.DetectCollisions(gameState->mObstacles, dt, sWindowSize);
+
 	// Update bullets
 	for (auto &b : gameState->mBullets)
 	{
 		b.Update(dt);
 		// Apply collision detection/response
-		b.DetectCollisions(gameState->mObstacles, sWindowSize, dt);
+		b.DetectCollisions(gameState->mObstacles, sWindowSize);
+	}
+
+	// Update enemies
+	for (auto &be : gameState->mBasicEnemies)
+	{
+		be.Update(gameState->mPlayer.mPos, dt);
+		be.DetectCollisions(gameState->mObstacles, gameState->mBullets, dt);
 	}
 	
 }
@@ -39,14 +49,19 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 	// Render player
 	gameState->mPlayer.Render(renderWin, resources);
 	// Render bullets
-	for (auto &b : gameState->mBullets)
+	for (auto b : gameState->mBullets)
 	{
 		b.Render(renderWin);
 	}
 	// Render obstacles
 	for (auto o : gameState->mObstacles)
 	{
-		o.Render(renderWin);
+		o->Render(renderWin);
+	}
+	// Render basic enemies
+	for (auto e : gameState->mBasicEnemies)
+	{
+		e.Render(renderWin);
 	}
 }
 
@@ -54,9 +69,7 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 
 int main()
 {
-	
-
-
+	// Create the game window
 	sf::RenderWindow window(sf::VideoMode((uint32_t)sWindowSize.x, (uint32_t)sWindowSize.y), "Rebound");
 	window.setVerticalSyncEnabled(true);
 	
@@ -67,14 +80,11 @@ int main()
 	// Tracks time between frames (dt)
 	sf::Clock clock;
 
-	// Initiate gamestate
+	// Initialise gamestate
 	Gamestate gameState = {};
 	
 	// Setup game vars
 	gameState.SetupGame(sWindowSize);
-	
-	
-	
 
 	// Setup resources
 	Resources resources;

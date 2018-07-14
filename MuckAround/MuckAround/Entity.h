@@ -12,6 +12,7 @@ public:
 	vec2 mVelocity   = vec2(0.0f, 0.0f);
 
 	float mHealth    = 0.0f;
+	float mMaxHealth = 0.0f;
 	float mSpeed     = 0.0f;
 	float mRadius	 = 0.0f;
 

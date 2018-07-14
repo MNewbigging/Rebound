@@ -16,17 +16,16 @@ public:
 	vec2 mMousePos					 = vec2(0.0f, 0.0f);
 	vec2 mFacingDir					 = vec2(0.0f, 0.0f);
 	// Bullet variables
+	const float mBulletFireDelay = 0.2f;
 	float mBulletFireCooldown	     = 0.0f;
-	const float mBulletFireDelay     = 0.2f;
+	float mBulletLifeSpan		     = 2.5f;
 	int mBulletsFiredLimit			 = 3;
-	float mBulletLifeSpan			 = 2.5f;
 	bool mFiredRecently				 = false;
 
-	
+	//////////////////////////////////////////////////////////////////////////////
 
-
-
-	void Update(std::vector<Bullet> &bullets, float dt)
+	// Handles movement, firing bullets
+	virtual void Update(std::vector<Bullet> &bullets, float dt)
 	{
 		mVelocity = vec2(0.0f, 0.0f);
 
@@ -80,7 +79,7 @@ public:
 						// Reset cooldown timer to prevent firing again immediately
 						mBulletFireCooldown = mBulletFireDelay;
 
-						// Activate the next available bullet
+						// Activate this available bullet
 						bullets[i].mActive = true;
 
 						// Set movement vars
@@ -91,11 +90,59 @@ public:
 						// Stop looking for other active bullets
 						break;
 					}
-					// else - no bullets available (sfx?)
 				}
 			}
 		} // end if mouse left down
 	
+	}
+
+
+	void DetectCollisions(std::vector<Obstacle*> obstacles, float dt, vec2 winSize)
+	{
+		// Check against window boundaries
+		if (mPos.x + mRadius > winSize.x * 0.5f)
+		{
+			// Move back within window
+			mPos.x = (winSize.x * 0.5f) - mRadius;
+		}
+		else if (mPos.x - mRadius < -(winSize.x * 0.5f))
+		{
+			mPos.x = -(winSize.x * 0.5f) + mRadius;
+		}
+		if (mPos.y + mRadius > winSize.y * 0.5f)
+		{
+			mPos.y = (winSize.y * 0.5f) - mRadius;
+		}
+		else if (mPos.y - mRadius < -(winSize.y * 0.5f))
+		{
+			mPos.y = -(winSize.y * 0.5f) + mRadius;
+		}
+
+		// Check against obstacles
+		for (auto &obs : obstacles)
+		{
+			switch (obs->mType)
+			{
+			// Circle obstacle
+			case 1:
+			{
+				// Cast obs to circle type
+				CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
+				if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+				{
+					// Find collision normal
+					vec2 colNormal = Normalize(circleObs->mPos - mPos);
+					// Move back based on normal by speed
+					// Essentially the reverse of how we got here
+					mPos -= colNormal * mSpeed * dt;
+				}
+				break;
+			}
+			default:
+				break;
+			}
+			
+		}
 	}
 
 	void Render(sf::RenderWindow* renderWin, Resources* resources)
@@ -114,6 +161,5 @@ public:
 
 		// Draw
 		renderWin->draw(playerSprite);
-
 	}
 };
