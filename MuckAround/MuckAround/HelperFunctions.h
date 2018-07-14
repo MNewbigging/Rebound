@@ -86,12 +86,12 @@ bool CircleToCircleIntersection(vec2 c1, vec2 c2, float r1, float r2)
 //////////////////////////////////////////////////////////////////////////
 
 // Test intersection between a line and circle
-bool LineToCircleIntersection(vec2 p1, vec2 p2, vec2 circleCenter, float circleRadius)
+bool LineToCircleIntersection(vec2 p1, vec2 p2, vec2 circleCenter, float circleRadius, vec2 &closestPoint)
 {
 	vec2 d = p2 - p1;
 	vec2 f = circleCenter - p1;
 
-	// find the closest point between the line and the circle center
+	// find the closest point on the line from circle center
 	vec2 du = Normalize(d);
 	float proj = Dot(f, du);
 
@@ -119,6 +119,7 @@ bool LineToCircleIntersection(vec2 p1, vec2 p2, vec2 circleCenter, float circleR
 		return false;
 	}
 
+	closestPoint = closest;
 	return true;
 }
 

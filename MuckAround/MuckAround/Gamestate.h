@@ -12,40 +12,37 @@ typedef sf::Vector2f vec2;
 
 struct Gamestate
 {
-	// Gameplay variables - only edited here
+	// Player vars
 	const float cPlayerSize       = 25.0f;
 	const float cPlayerSpeed	  = 180.0f;
 	const float cPlayerHealth	  = 100.0f;
-
+	// Bullets
 	const float cBulletSize		  = 8.0f;
 	const float cBulletSpeed	  = 200.0f;
 	const int cMaxBulletCount     = 5;
-
-	const int cCircleObsType   = 1;
-	
+	// Obstacles
+	const int cCircleObsType		 = 1;
+	const float cCircleObsSize		 = 40.0f;
+	const sf::Color cCircleObsColour  = sf::Color::Green;
+	const int cRectObsType			 = 2;
+	const vec2 cRectObsSize			 = vec2(100.0f, 100.0f);
+	const sf::Color cRectObsColour	 = sf::Color::Blue;
+	// Enemies
 	const float cBasicEnemySize      = 15.0f;
 	const float cBasicEnemySpeed     = 125.0f;
 	const float cBasicEnemyMaxHealth = 100.0f;
 	const int cMaxBasicEnemyCount    = 1;
-
 	const sf::Color cBasicEnemyNormalColor = sf::Color::Magenta;
 	const sf::Color cBasicEnemyHitColor = sf::Color::Red;
 
+	// Game objects
 	Player mPlayer;
-
 	std::vector<BasicEnemy> mBasicEnemies;
     std::vector<Bullet> mBullets;
 	std::vector<Obstacle*> mObstacles;
 
-	// General game setup - called once before main loop
-	void SetupGame(vec2 windowSize)
-	{
-		SetupPlayer();
-		SetupBullets(windowSize);
-		SetupObstacles();
-		SetupEnemies(windowSize);
-	}
-
+	/////////////////////////////////////////////////////////////////////
+	
 	Gamestate() {}
 	// Deconstructor - delete objects declared new
 	~Gamestate() 
@@ -56,6 +53,16 @@ struct Gamestate
 		}
 		mObstacles.clear();
 	}
+
+	// General game setup - called once before main loop
+	void SetupGame(vec2 windowSize)
+	{
+		SetupPlayer();
+		SetupBullets(windowSize);
+		SetupObstacles();
+		SetupEnemies(windowSize);
+	}
+
 private:
 
 	void SetupPlayer()
@@ -91,14 +98,25 @@ private:
 	// Starting obstacles
 	void SetupObstacles()
 	{
+		// Circle 
 		CircleObstacle* obs = new CircleObstacle();
-
-		obs->mType = cCircleObsType;
+		// Assign properties
 		obs->mPos = vec2(100.0f, 100.0f);
-		obs->mRadius = 40.0f;
-		obs->mColour = sf::Color::Green;
-
+		obs->mType = cCircleObsType;
+		obs->mRadius = cCircleObsSize;
+		obs->mColour = cCircleObsColour;
+		// Add it to list
 		mObstacles.push_back(obs);
+
+		// Rectangle
+		RectangleObstacle* rec = new RectangleObstacle();
+		rec->mPos = vec2(-100.0f, -100.0f);
+		rec->mType = cRectObsType;
+		rec->mSize = cRectObsSize;
+		rec->mColour = cRectObsColour;
+		rec->FindVertices();
+
+		mObstacles.push_back(rec);
 	}
 
 	void SetupEnemies(vec2 windowSize)

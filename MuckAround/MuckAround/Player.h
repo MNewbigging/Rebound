@@ -99,6 +99,41 @@ public:
 
 	void DetectCollisions(std::vector<Obstacle*> obstacles, float dt, vec2 winSize)
 	{
+		// Check agaist game window
+		CheckAgainstWindow(winSize);
+
+		// Check against obstacles
+		for (auto &obs : obstacles)
+		{
+			switch (obs->mType)
+			{
+			// Circle obstacle
+			case 1:
+			{
+				// Cast obs to circle type
+				CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
+				CheckAgainstCircleObstacles(circleObs, dt);
+				break;
+			}
+			// Rectangle obstacle
+			case 2:
+			{
+				// Cast obs to rect type
+				RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(obs);
+				CheckAgainstRectangleObstacles(rectObs, dt);
+				
+			} // case 2 end
+				break;
+			default:
+				break;
+			} // switch end
+			
+		} 
+	}
+
+	// Collision detection/resolution for window boundaries
+	void CheckAgainstWindow(vec2 winSize)
+	{
 		// Check against window boundaries
 		if (mPos.x + mRadius > winSize.x * 0.5f)
 		{
@@ -117,34 +152,63 @@ public:
 		{
 			mPos.y = -(winSize.y * 0.5f) + mRadius;
 		}
-
-		// Check against obstacles
-		for (auto &obs : obstacles)
+	}
+	
+	// Collision detection/resolution for circle obstacles
+	void CheckAgainstCircleObstacles(CircleObstacle* &circleObs, float dt)
+	{
+		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
 		{
-			switch (obs->mType)
-			{
-			// Circle obstacle
-			case 1:
-			{
-				// Cast obs to circle type
-				CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
-				if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
-				{
-					// Find collision normal
-					vec2 colNormal = Normalize(circleObs->mPos - mPos);
-					// Move back based on normal by speed
-					// Essentially the reverse of how we got here
-					mPos -= colNormal * mSpeed * dt;
-				}
-				break;
-			}
-			default:
-				break;
-			}
-			
+			// Find collision normal
+			vec2 colNormal = Normalize(circleObs->mPos - mPos);
+			// Move back based on normal by speed
+			// Essentially the reverse of how we got here
+			mPos -= colNormal * mSpeed * dt;
 		}
 	}
+	
+	// Collision detection/resolution for rectangle obstacles
+	void CheckAgainstRectangleObstacles(RectangleObstacle* &rectObs, float dt)
+	{
+		// Basic distance check - only perform actual collision checks if close enough
+		vec2 d = rectObs->mPos - mPos;
+		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
+		{
+			// Iterate over rect vertices to find which side might be intersecting player 
+			for (int i = 0; i < rectObs->mVertices.size(); i++)
+			{
+				// Find the closest point on line to circle (if there's an intersection)
+				vec2 point = vec2(0.0f, 0.0f);
+				// Wrap around: 3-0
+				if (i == 3)
+				{
+					if (LineToCircleIntersection(rectObs->mVertices[i],
+						rectObs->mVertices[0],
+						mPos, mRadius,
+						point))
+					{
+						// Find collision normal
+						vec2 colNormal = Normalize(point - mPos);
+						// Move player back along collision normal
+						mPos -= colNormal * mSpeed * dt;
+					}
+					break;
+				}
+				// 0-1, 1-2, 2-3
+				if (LineToCircleIntersection(rectObs->mVertices[i],
+					rectObs->mVertices[i + 1],
+					mPos, mRadius,
+					point))
+				{
+					// Find collision normal
+					vec2 colNormal = Normalize(point - mPos);
+					// Move player back along collision normal
+					mPos -= colNormal * mSpeed * dt;
+				}
+			}
 
+		}
+	}
 	void Render(sf::RenderWindow* renderWin, Resources* resources)
 	{
 		// Grab player sprite texture from resources
