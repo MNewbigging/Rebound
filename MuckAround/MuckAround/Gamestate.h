@@ -114,8 +114,8 @@ private:
 		rec->mType = cRectObsType;
 		rec->mSize = cRectObsSize;
 		rec->mColour = cRectObsColour;
+		rec->mRot = 45;
 		rec->FindVertices();
-
 		mObstacles.push_back(rec);
 	}
 

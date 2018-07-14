@@ -2,6 +2,7 @@
 
 #include <SFML\Graphics.hpp>
 #include <vector>
+#include "HelperFunctions.h"
 
 typedef sf::Vector2f vec2;
 
@@ -44,6 +45,8 @@ public:
 class RectangleObstacle : public Obstacle
 {
 public:
+	
+	float mRot = 0.0f;
 
 	vec2 mSize = vec2(0.0f, 0.0f);
 
@@ -67,12 +70,27 @@ public:
 		vec2 vD = vec2(0.0f, 0.0f);
 		vD.x = mPos.x - (mSize.x * 0.5f);
 		vD.y = mPos.y + (mSize.y * 0.5f);
+
 		// Update vertices list
 		mVertices.clear();
 		mVertices.push_back(vA);
 		mVertices.push_back(vB);
 		mVertices.push_back(vC);
 		mVertices.push_back(vD);
+
+		// Apply rotation of rect to each corner point
+		for (auto &v : mVertices)
+		{
+			// Translate corner point to origin
+			float transX = v.x - mPos.x;
+			float transY = v.y - mPos.y;
+			// Apply rotation
+			float rotatedX = (transX * cos(mRot)) - (transY * sin(mRot));
+			float rotatedY = (transX * sin(mRot)) + (transY * cos(mRot));
+			// Translate back to corner point
+			v.x = rotatedX + mPos.x;
+			v.y = rotatedY + mPos.y;
+		}
 	}
 	
 	virtual void Render(sf::RenderWindow* renderWin)
@@ -84,6 +102,8 @@ public:
 		rectShape.setOrigin(mSize * 0.5f);
 
 		rectShape.setPosition(mPos);
+
+		rectShape.setRotation(mRot);
 
 		renderWin->draw(rectShape);
 	}

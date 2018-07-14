@@ -85,7 +85,7 @@ public:
 						// Set movement vars
 						bullets[i].mLifetime = mBulletLifeSpan;
 						bullets[i].mPos = mPos;
-						bullets[i].mVelocity = mFacingDir * bullets[i].mSpeed; // Store bullet speed in player? 
+						bullets[i].mVelocity = mFacingDir; // Store bullet speed in player? 
 
 						// Stop looking for other active bullets
 						break;

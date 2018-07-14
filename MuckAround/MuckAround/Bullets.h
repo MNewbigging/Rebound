@@ -44,7 +44,7 @@ public:
 			else
 			{
 				// Calculate next position of bullet
-				mPos += mVelocity * dt;
+				mPos += mVelocity * mSpeed * dt;
 			}
 		}
 	}
@@ -90,12 +90,8 @@ public:
 				}
 				default:
 					break;
-				}
-				
-
-			}
-
-			
+				} // end switch
+			} // end for each obstacle		
 		} // end if active
 	} // end detect cols
 
@@ -196,6 +192,7 @@ public:
 					mVelocity = Reflect(mVelocity, colNormal);
 					// Bullet has collided with something
 					mCanDamage = true;
+					break;
 				}
 			}
 
