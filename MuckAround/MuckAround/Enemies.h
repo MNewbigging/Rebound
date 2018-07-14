@@ -16,6 +16,8 @@ public:
 	sf::Color mNormalColor;
 	sf::Color mHitColor;
 
+	//////////////////////////////////////////////////////////////////////////////
+
 	// Track player
 	void Update(vec2 playerPos, float dt)
 	{
@@ -27,6 +29,12 @@ public:
 		mColor = mNormalColor;
 	}
 
+	// On enemy death
+	void MoveToEnemyPool()
+	{
+		mPos = mEnemyPoolPos;
+		mHealth = mMaxHealth;
+	}
 
 	void DetectCollisions(std::vector<Obstacle*> obstacles, std::vector<Bullet> &bullets, float dt)
 	{
@@ -40,20 +48,86 @@ public:
 			{
 				// Cast obs to circle type
 				CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
-				if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
-				{
-					// Find collision normal
-					vec2 colNormal = Normalize(circleObs->mPos - mPos);
-					// Move back based on normal by speed
-					mPos -= colNormal * mSpeed * dt;
-				}
+				CheckAgainstCircleObstacle(circleObs, dt);
+				break;
 			}
+			// Rectangle obstacle
+			case 2:
+			{
+				// Cast obs to rectangle type
+				RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(obs);
+				CheckAgainstRectangleObstacle(rectObs, dt);
+				break;
+			}
+				
 			default:
 				break;
 			}
 			
 		}
 
+		// Check against bullets
+		CheckAgainstBullets(bullets);
+	}
+
+	// Collision detection/resolution against circle obstacles
+	void CheckAgainstCircleObstacle(CircleObstacle* circleObs, float dt)
+	{
+		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+		{
+			// Find collision normal
+			vec2 colNormal = Normalize(circleObs->mPos - mPos);
+			// Move back based on normal by speed
+			mPos -= colNormal * mSpeed * dt;
+		}
+	}
+	
+	// Collision detection/resolution against rectangle obstacles
+	void CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
+	{
+		// Basic distance check - only perform actual collision checks if close enough
+		vec2 d = rectObs->mPos - mPos;
+		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
+		{
+			// Iterate over rect vertices to find which side might be intersecting player 
+			for (int i = 0; i < rectObs->mVertices.size(); i++)
+			{
+				// Find the closest point on line to circle (if there's an intersection)
+				vec2 point = vec2(0.0f, 0.0f);
+				// Wrap around: 3-0
+				if (i == 3)
+				{
+					if (LineToCircleIntersection(rectObs->mVertices[i],
+						rectObs->mVertices[0],
+						mPos, mRadius,
+						point))
+					{
+						// Find collision normal
+						vec2 colNormal = Normalize(point - mPos);
+						// Move enemy back along collision normal
+						mPos -= colNormal * mSpeed * dt;
+					}
+					break;
+				}
+				// 0-1, 1-2, 2-3
+				if (LineToCircleIntersection(rectObs->mVertices[i],
+					rectObs->mVertices[i + 1],
+					mPos, mRadius,
+					point))
+				{
+					// Find collision normal
+					vec2 colNormal = Normalize(point - mPos);
+					// Move enemy back along collision normal
+					mPos -= colNormal * mSpeed * dt;
+				}
+			}
+
+		}
+	}
+
+	// Collision detection/resolution against bullets
+	void CheckAgainstBullets(std::vector<Bullet> &bullets)
+	{
 		// Check against bullets
 		for (auto &b : bullets)
 		{
@@ -76,12 +150,9 @@ public:
 			}
 		}
 	}
+	
+	// Collision detection/resolution against the player
 
-	void MoveToEnemyPool()
-	{
-		mPos = mEnemyPoolPos;
-		mHealth = mMaxHealth;
-	}
 
 	void Render(sf::RenderWindow* renderWin)
 	{

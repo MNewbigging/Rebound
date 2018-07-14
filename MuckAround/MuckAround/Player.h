@@ -96,7 +96,6 @@ public:
 	
 	}
 
-
 	void DetectCollisions(std::vector<Obstacle*> obstacles, float dt, vec2 winSize)
 	{
 		// Check agaist game window
@@ -112,7 +111,7 @@ public:
 			{
 				// Cast obs to circle type
 				CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
-				CheckAgainstCircleObstacles(circleObs, dt);
+				CheckAgainstCircleObstacle(circleObs, dt);
 				break;
 			}
 			// Rectangle obstacle
@@ -120,10 +119,10 @@ public:
 			{
 				// Cast obs to rect type
 				RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(obs);
-				CheckAgainstRectangleObstacles(rectObs, dt);
-				
-			} // case 2 end
+				CheckAgainstRectangleObstacle(rectObs, dt);
 				break;
+			} // case 2 end
+				
 			default:
 				break;
 			} // switch end
@@ -155,7 +154,7 @@ public:
 	}
 	
 	// Collision detection/resolution for circle obstacles
-	void CheckAgainstCircleObstacles(CircleObstacle* &circleObs, float dt)
+	void CheckAgainstCircleObstacle(CircleObstacle* circleObs, float dt)
 	{
 		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
 		{
@@ -168,7 +167,7 @@ public:
 	}
 	
 	// Collision detection/resolution for rectangle obstacles
-	void CheckAgainstRectangleObstacles(RectangleObstacle* &rectObs, float dt)
+	void CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
 	{
 		// Basic distance check - only perform actual collision checks if close enough
 		vec2 d = rectObs->mPos - mPos;
@@ -209,6 +208,8 @@ public:
 
 		}
 	}
+	
+	
 	void Render(sf::RenderWindow* renderWin, Resources* resources)
 	{
 		// Grab player sprite texture from resources

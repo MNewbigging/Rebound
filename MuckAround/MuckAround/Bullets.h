@@ -24,14 +24,8 @@ public:
 	// Bullet damage
 	float mDamage		 = 25.0f;
 	
+	//////////////////////////////////////////////////////////////////////////////
 
-	// Since using bullet pool; when not fired/alive move off screen and reset
-	void MoveToBulletPool()
-	{
-		mPos = mBulletPoolPos;
-		mActive = false;
-		mCanDamage = false;
-	}
 
 	// Update position, reset to bullet pool if life ended
 	void Update(float dt)
@@ -55,21 +49,23 @@ public:
 		}
 	}
 
-	// Draw to window
-	void Render(sf::RenderWindow* renderWin)
+	// Since using bullet pool; when not fired/alive move off screen and reset
+	void MoveToBulletPool()
 	{
-		sf::CircleShape bulletCircle(mRadius);
-		bulletCircle.setOrigin(mRadius / 2, mRadius / 2);
-		bulletCircle.setPosition(mPos);
-		renderWin->draw(bulletCircle);	
+		mPos = mBulletPoolPos;
+		mActive = false;
+		mCanDamage = false;
 	}
+
 	
-	// Obstacles, window edges
 	void DetectCollisions(std::vector<Obstacle*> obstacles, vec2 winSize)
 	{
 		// Only test for cols if bullet is active
 		if (mActive)
 		{
+			// Check against window edges
+			CheckAgainstWindow(winSize);
+
 			// Test against obstacles
 			for (auto &obs : obstacles)
 			{
@@ -81,66 +77,138 @@ public:
 				{
 					// Cast obs to circle type
 					CircleObstacle* circleObs = dynamic_cast<CircleObstacle*>(obs);
-					if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+					CheckAgainstCircleObstacle(circleObs);
+					break;
+				}
+				// Rectangle obstacle
+				case 2:
+				{
+					// Cast obs to rect type
+					RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(obs);
+					CheckAgainstRectangleObstacle(rectObs);
+					break;
+				}
+				default:
+					break;
+				}
+				
+
+			}
+
+			
+		} // end if active
+	} // end detect cols
+
+	void CheckAgainstWindow(vec2 winSize)
+	{
+		// Test against edge of screen (should bounce inwards as if there was a wall)
+		if (mPos.x + mRadius > winSize.x / 2)
+		{
+			// Move away from collision point
+			mPos.x = (winSize.x / 2) - mRadius;
+			// Normal points to left
+			vec2 colNormal = vec2(-1.0f, 0.0f);
+			// Reflect
+			mVelocity = Reflect(mVelocity, colNormal);
+			// Bullet has collided with something
+			mCanDamage = true;
+		}
+		else if (mPos.x - mRadius < -(winSize.x / 2))
+		{
+			// Move away from collision
+			mPos.x = -(winSize.x / 2) + mRadius;
+			// Normal points to right
+			vec2 colNormal = vec2(1.0f, 0.0f);
+			// Reflect
+			mVelocity = Reflect(mVelocity, colNormal);
+			// Bullet has collided with something
+			mCanDamage = true;
+		}
+		// Again for y
+		if (mPos.y + mRadius > winSize.y / 2)
+		{
+			mPos.y = (winSize.y / 2) - mRadius;
+			vec2 colNormal = vec2(0.0f, 1.0f);
+			mVelocity = Reflect(mVelocity, colNormal);
+			// Bullet has collided with something
+			mCanDamage = true;
+		}
+		else if (mPos.y - mRadius < -(winSize.y / 2))
+		{
+			mPos.y = -(winSize.y / 2) + mRadius;
+			vec2 colNormal = vec2(0.0f, -1.0f);
+			mVelocity = Reflect(mVelocity, colNormal);
+			// Bullet has collided with something
+			mCanDamage = true;
+		}
+	}
+
+	void CheckAgainstCircleObstacle(CircleObstacle* circleObs)
+	{
+		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+		{
+			// Find collision normal
+			vec2 colNormal = Normalize(circleObs->mPos - mPos);
+			// Reflect around this normal
+			mVelocity = Reflect(mVelocity, colNormal);
+			// Bullet has collided with something
+			mCanDamage = true;
+		}
+	}
+
+	void CheckAgainstRectangleObstacle(RectangleObstacle* rectObs)
+	{
+		// Basic distance check - only perform actual collision checks if close enough
+		vec2 d = rectObs->mPos - mPos;
+		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
+		{
+			// Iterate over rect vertices to find which side might be intersecting player 
+			for (int i = 0; i < rectObs->mVertices.size(); i++)
+			{
+				// Find the closest point on line to circle (if there's an intersection)
+				vec2 point = vec2(0.0f, 0.0f);
+				// Wrap around: 3-0
+				if (i == 3)
+				{
+					if (LineToCircleIntersection(rectObs->mVertices[i],
+						rectObs->mVertices[0],
+						mPos, mRadius,
+						point))
 					{
 						// Find collision normal
-						vec2 colNormal = Normalize(circleObs->mPos - mPos);
+						vec2 colNormal = Normalize(point - mPos);
 						// Reflect around this normal
 						mVelocity = Reflect(mVelocity, colNormal);
 						// Bullet has collided with something
 						mCanDamage = true;
 					}
 					break;
-				}		
-				default:
-					break;
 				}
-
-				
+				// 0-1, 1-2, 2-3
+				if (LineToCircleIntersection(rectObs->mVertices[i],
+					rectObs->mVertices[i + 1],
+					mPos, mRadius,
+					point))
+				{
+					// Find collision normal
+					vec2 colNormal = Normalize(point - mPos);
+					// Reflect around this normal
+					mVelocity = Reflect(mVelocity, colNormal);
+					// Bullet has collided with something
+					mCanDamage = true;
+				}
 			}
 
-			// Test against edge of screen (should bounce inwards as if there was a wall)
-			if (mPos.x + mRadius > winSize.x / 2)
-			{
-				// Move away from collision point
-				mPos.x = (winSize.x / 2) - mRadius;
-				// Normal points to left
-				vec2 colNormal = vec2(-1.0f, 0.0f);
-				// Reflect
-				mVelocity = Reflect(mVelocity, colNormal);
-				// Bullet has collided with something
-				mCanDamage = true;
-			}
-			else if (mPos.x - mRadius < -(winSize.x / 2))
-			{
-				// Move away from collision
-				mPos.x = -(winSize.x / 2) + mRadius;
-				// Normal points to right
-				vec2 colNormal = vec2(1.0f, 0.0f);
-				// Reflect
-				mVelocity = Reflect(mVelocity, colNormal);
-				// Bullet has collided with something
-				mCanDamage = true;
-			}
-			// Again for y
-			if (mPos.y + mRadius > winSize.y / 2)
-			{
-				mPos.y = (winSize.y / 2) - mRadius;
-				vec2 colNormal = vec2(0.0f, 1.0f);
-				mVelocity = Reflect(mVelocity, colNormal);
-				// Bullet has collided with something
-				mCanDamage = true;
-			}
-			else if (mPos.y - mRadius < -(winSize.y / 2))
-			{
-				mPos.y = -(winSize.y / 2) + mRadius;
-				vec2 colNormal = vec2(0.0f, -1.0f);
-				mVelocity = Reflect(mVelocity, colNormal);
-				// Bullet has collided with something
-				mCanDamage = true;
-			}
-		} // end if active
-	} // end detect cols
+		}
+	}
 
+	// Draw to window
+	void Render(sf::RenderWindow* renderWin)
+	{
+		sf::CircleShape bulletCircle(mRadius);
+		bulletCircle.setOrigin(mRadius / 2, mRadius / 2);
+		bulletCircle.setPosition(mPos);
+		renderWin->draw(bulletCircle);	
+	}
 
 };
