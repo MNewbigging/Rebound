@@ -52,7 +52,27 @@ public:
 
 	std::vector<vec2> mVertices;
 
+	bool goingLeft = false;
+
+	float speed = 25.0f;
+
 	/////////////////////////////////////////////////////////////////////
+
+	void Update(float dt, vec2 winSize)
+	{
+		if (mPos.x >= (winSize.x + mSize.x) * 0.5f)
+			goingLeft = true;
+		
+		else if (mPos.x <= -(winSize.x + mSize.x) * 0.5f)
+			goingLeft = false;
+
+		if (goingLeft)
+			mPos.x -= speed * dt;
+		else
+			mPos.x += speed * dt;
+
+		FindVertices();
+	}
 
 	// Determine & cache vertices of this rectangle
 	void FindVertices()

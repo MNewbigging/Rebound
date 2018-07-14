@@ -18,14 +18,14 @@ struct Gamestate
 	const float cPlayerHealth	  = 100.0f;
 	// Bullets
 	const float cBulletSize		  = 8.0f;
-	const float cBulletSpeed	  = 200.0f;
+	const float cBulletSpeed	  = 250.0f;
 	const int cMaxBulletCount     = 5;
 	// Obstacles
 	const int cCircleObsType		 = 1;
 	const float cCircleObsSize		 = 40.0f;
 	const sf::Color cCircleObsColour  = sf::Color::Green;
 	const int cRectObsType			 = 2;
-	const vec2 cRectObsSize			 = vec2(100.0f, 100.0f);
+	const vec2 cRectObsSize			 = vec2(20.f, 100.0f);
 	const sf::Color cRectObsColour	 = sf::Color::Blue;
 	// Enemies
 	const float cBasicEnemySize      = 15.0f;

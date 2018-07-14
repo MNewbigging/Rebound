@@ -39,7 +39,10 @@ void Update(Gamestate* gameState, float dt)
 		be.Update(gameState->mPlayer.mPos, dt);
 		be.DetectCollisions(gameState->mObstacles, gameState->mBullets, dt);
 	}
-	
+
+	// Update rotating obstacles
+	RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(gameState->mObstacles[1]);
+	rectObs->Update(dt, sWindowSize);
 }
 
 ///////////////////////////////////////////////////////////////////

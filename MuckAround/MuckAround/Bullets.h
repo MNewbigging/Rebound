@@ -23,9 +23,9 @@ public:
 	float mLifetime		 = 0.0f;
 	// Bullet damage
 	float mDamage		 = 25.0f;
-	
+	// Enforce cooldown on rebounding
+	float mCanBounce	 = 0.0f;
 	//////////////////////////////////////////////////////////////////////////////
-
 
 	// Update position, reset to bullet pool if life ended
 	void Update(float dt)
@@ -33,6 +33,8 @@ public:
 		// Is this bullet active (fired from player and on screen?)
 		if (mActive)
 		{
+			// Reduce can bounce cooldown
+			mCanBounce -= dt;
 			// Reduce lifetime
 			mLifetime -= dt;
 
@@ -56,7 +58,6 @@ public:
 		mActive = false;
 		mCanDamage = false;
 	}
-
 	
 	void DetectCollisions(std::vector<Obstacle*> obstacles, vec2 winSize)
 	{
@@ -156,7 +157,7 @@ public:
 	{
 		// Basic distance check - only perform actual collision checks if close enough
 		vec2 d = rectObs->mPos - mPos;
-		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
+		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize) && mCanBounce <= 0)
 		{
 			// Iterate over rect vertices to find which side might be intersecting player 
 			for (int i = 0; i < rectObs->mVertices.size(); i++)
@@ -177,6 +178,8 @@ public:
 						mVelocity = Reflect(mVelocity, colNormal);
 						// Bullet has collided with something
 						mCanDamage = true;
+						// Reset bounce cooldown
+						mCanBounce = 1.0f;
 					}
 					break;
 				}
@@ -192,6 +195,8 @@ public:
 					mVelocity = Reflect(mVelocity, colNormal);
 					// Bullet has collided with something
 					mCanDamage = true;
+					// Reset bounce cooldown
+					mCanBounce = 1.0f;
 					break;
 				}
 			}

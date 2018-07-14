@@ -172,7 +172,7 @@ public:
 		// Basic distance check - only perform actual collision checks if close enough
 		vec2 d = rectObs->mPos - mPos;
 		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
-		{
+		{			
 			// Iterate over rect vertices to find which side might be intersecting player 
 			for (int i = 0; i < rectObs->mVertices.size(); i++)
 			{
