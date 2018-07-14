@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Obstacles.h"
 #include "Enemies.h"
+#include "EnemyWaveSystem.h"
 
 
 typedef sf::Vector2f vec2;
@@ -31,15 +32,20 @@ struct Gamestate
 	const float cBasicEnemySize      = 15.0f;
 	const float cBasicEnemySpeed     = 125.0f;
 	const float cBasicEnemyMaxHealth = 100.0f;
-	const int cMaxBasicEnemyCount    = 1;
+	const int cMaxBasicEnemyCount    = 3;
+	int mEnemyWaveSize				 = 3;
 	const sf::Color cBasicEnemyNormalColor = sf::Color::Magenta;
 	const sf::Color cBasicEnemyHitColor = sf::Color::Red;
 
 	// Game objects
 	Player mPlayer;
-	std::vector<BasicEnemy> mBasicEnemies;
+	static std::vector<Enemy> mEnemies;
     std::vector<Bullet> mBullets;
 	std::vector<Obstacle*> mObstacles;
+
+	// Systems
+	friend class EnemyWaveSystem;
+	EnemyWaveSystem sysEnemyWave;
 
 	/////////////////////////////////////////////////////////////////////
 	
@@ -61,6 +67,7 @@ struct Gamestate
 		SetupBullets(windowSize);
 		SetupObstacles();
 		SetupEnemies(windowSize);
+		SetupSystems(windowSize);
 	}
 
 private:
@@ -123,7 +130,7 @@ private:
 	{
 		for (int i = 0; i < cMaxBasicEnemyCount; i++)
 		{
-			BasicEnemy enemy;
+			Enemy enemy;
 			enemy.mEnemyPoolPos = vec2(windowSize.x + (i * cBasicEnemySize * 2), -windowSize.y - 100);
 			enemy.mPos = enemy.mEnemyPoolPos;
 			enemy.mRadius = cBasicEnemySize;
@@ -132,8 +139,13 @@ private:
 			enemy.mNormalColor = sf::Color::Magenta;
 			enemy.mHitColor = sf::Color::Red;
 
-			mBasicEnemies.push_back(enemy);
+			mEnemies.push_back(enemy);
 		}
 	
+	}
+
+	void SetupSystems(vec2 windowSize)
+	{
+		sysEnemyWave.windowSize = windowSize;
 	}
 };

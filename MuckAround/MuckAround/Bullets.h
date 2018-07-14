@@ -8,6 +8,7 @@
 #include "Obstacles.h"
 #include "HelperFunctions.h"
 
+
 typedef sf::Vector2f vec2;
 
 class Bullet : public Entity
@@ -23,8 +24,9 @@ public:
 	float mLifetime		 = 0.0f;
 	// Bullet damage
 	float mDamage		 = 25.0f;
-	// Enforce cooldown on rebounding
-	float mCanBounce	 = 0.0f;
+	// Enforce cooldown on rebounding (so as not to proc col res more than once per bounce)
+	float mCanBounce	  = 0.0f;
+	float mBounceCooldown = 0.1;
 	//////////////////////////////////////////////////////////////////////////////
 
 	// Update position, reset to bullet pool if life ended
@@ -142,7 +144,8 @@ public:
 
 	void CheckAgainstCircleObstacle(CircleObstacle* circleObs)
 	{
-		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius)
+			&& mCanBounce <= 0)
 		{
 			// Find collision normal
 			vec2 colNormal = Normalize(circleObs->mPos - mPos);
@@ -150,6 +153,8 @@ public:
 			mVelocity = Reflect(mVelocity, colNormal);
 			// Bullet has collided with something
 			mCanDamage = true;
+			// Set bounce timer
+			mCanBounce = mBounceCooldown;
 		}
 	}
 
@@ -179,7 +184,7 @@ public:
 						// Bullet has collided with something
 						mCanDamage = true;
 						// Reset bounce cooldown
-						mCanBounce = 1.0f;
+						mCanBounce = mBounceCooldown;
 					}
 					break;
 				}
@@ -196,7 +201,7 @@ public:
 					// Bullet has collided with something
 					mCanDamage = true;
 					// Reset bounce cooldown
-					mCanBounce = 1.0f;
+					mCanBounce = mBounceCooldown;
 					break;
 				}
 			}

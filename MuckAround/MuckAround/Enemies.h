@@ -5,12 +5,13 @@
 
 typedef sf::Vector2f vec2;
 
-class BasicEnemy : public Entity
+class Enemy : public Entity
 {
 public:
-	
-	float mLastHit		= 0.0f;
+		
 	vec2 mEnemyPoolPos  = vec2(0.0f, 0.0f);
+
+	bool mActive		= false;
 
 	sf::Color mColor;
 	sf::Color mNormalColor;
@@ -21,12 +22,15 @@ public:
 	// Track player
 	void Update(vec2 playerPos, float dt)
 	{
-		// Move towards player
-		mVelocity = Normalize(playerPos - mPos) * mSpeed;
-		mPos += mVelocity * dt;
+		if (mActive)
+		{
+			// Move towards player
+			mVelocity = Normalize(playerPos - mPos) * mSpeed;
+			mPos += mVelocity * dt;
 
-		// Change color back to normal
-		mColor = mNormalColor;
+			// Change color back to normal
+			mColor = mNormalColor;
+		}
 	}
 
 	// On enemy death
@@ -34,6 +38,7 @@ public:
 	{
 		mPos = mEnemyPoolPos;
 		mHealth = mMaxHealth;
+		mActive = false;
 	}
 
 	void DetectCollisions(std::vector<Obstacle*> obstacles, std::vector<Bullet> &bullets, float dt)
@@ -138,10 +143,7 @@ public:
 				// Flash color to show hit effect
 				mColor = mHitColor;
 				// Send bullet back to pool
-				//b.MoveToBulletPool();
-				b.mPos = b.mBulletPoolPos;
-				b.mActive = false;
-				b.mCanDamage = false;
+				b.MoveToBulletPool();
 				// Has this enemy died? 
 				if (mHealth <= 0)
 				{

@@ -14,7 +14,7 @@ using namespace std;
 
 typedef sf::Vector2f vec2;
 
-static const vec2 sWindowSize = vec2(1280.0f, 720.0f);
+const vec2 sWindowSize = vec2(1280.0f, 720.0f);
 
 ///////////////////////////////////////////////////////////////////
 
@@ -34,15 +34,20 @@ void Update(Gamestate* gameState, float dt)
 	}
 
 	// Update basic enemies
-	for (auto &be : gameState->mBasicEnemies)
+	for (auto &be : gameState->mEnemies)
 	{
 		be.Update(gameState->mPlayer.mPos, dt);
 		be.DetectCollisions(gameState->mObstacles, gameState->mBullets, dt);
 	}
 
-	// Update rotating obstacles
+	// Update moving obstacles
+	// TODO - tidy
 	RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(gameState->mObstacles[1]);
 	rectObs->Update(dt, sWindowSize);
+
+	// Update systems
+	gameState->sysEnemyWave.Update(dt);
+
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -62,7 +67,7 @@ void Render(Gamestate* gameState, sf::RenderWindow* renderWin, Resources* resour
 		o->Render(renderWin);
 	}
 	// Render basic enemies
-	for (auto e : gameState->mBasicEnemies)
+	for (auto e : gameState->mEnemies)
 	{
 		e.Render(renderWin);
 	}
