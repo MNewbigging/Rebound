@@ -1,5 +1,10 @@
 #include "Obstacles.h"
 
+CircleObstacle::CircleObstacle()
+{
+	mType = 1;
+}
+
 void CircleObstacle::Render(sf::RenderWindow* renderWin)
 {
 
@@ -15,6 +20,11 @@ void CircleObstacle::Render(sf::RenderWindow* renderWin)
 }
 
 /////////////////////////////////////////////////////////////////////
+
+RectangleObstacle::RectangleObstacle()
+{
+	mType = 2;
+}
 
 void RectangleObstacle::Update(float dt, vec2 winSize)
 {

@@ -61,7 +61,13 @@ private:
 
 	void LoadLevel();
 
-	void CreateCircleObstacle(std::vector<std::string> lineData);
+	vec2 ParseVec2(std::string vecString);
+
+	float ParseFloat(std::string floatString);
+
+	int ParseInt(std::string intString);
+
+	sf::Color ParseColour(std::string colourString);
 
 	void SetupEnemies(vec2 windowSize);
 

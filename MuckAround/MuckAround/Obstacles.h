@@ -26,6 +26,7 @@ public:
 	float mRadius = 0.0f;
 
 	/////////////////////////////////////////////////////////////////////
+	CircleObstacle();
 
 	virtual void Render(sf::RenderWindow* renderWin);
 	
@@ -46,6 +47,7 @@ public:
 	float mSpeed = 15.0f;
 
 	/////////////////////////////////////////////////////////////////////
+	RectangleObstacle();
 
 	void Update(float dt, vec2 winSize);
 
