@@ -16,14 +16,6 @@ void CircleObstacle::Render(sf::RenderWindow* renderWin)
 
 /////////////////////////////////////////////////////////////////////
 
-RectangleObstacle::RectangleObstacle()
-{
-	mRot = 0.0f;
-	mSize = vec2(0.0f, 0.0f);
-	goingLeft = false;
-	speed = 0.0f;
-}
-
 void RectangleObstacle::Update(float dt, vec2 winSize)
 {
 	if (mPos.x >= (winSize.x + mSize.x) * 0.5f)
@@ -33,9 +25,9 @@ void RectangleObstacle::Update(float dt, vec2 winSize)
 		goingLeft = false;
 
 	if (goingLeft)
-		mPos.x -= speed * dt;
+		mPos.x -= mSpeed * dt;
 	else
-		mPos.x += speed * dt;
+		mPos.x += mSpeed * dt;
 
 	FindVertices();
 }

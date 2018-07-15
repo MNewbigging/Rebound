@@ -24,8 +24,6 @@ public:
 	bool mFiredRecently				 = false;
 
 	//////////////////////////////////////////////////////////////////////////////
-	Player() {}
-	~Player() {}
 
 	virtual void Update(std::vector<Bullet> &bullets, float dt);
 

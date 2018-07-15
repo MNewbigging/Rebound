@@ -20,8 +20,6 @@ public:
 	sf::Color mHitColor;
 
 	//////////////////////////////////////////////////////////////////////////////
-	Enemy() {}
-	~Enemy() {}
 
 	void Update(vec2 playerPos, float dt);
 

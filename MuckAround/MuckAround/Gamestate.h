@@ -2,6 +2,8 @@
 
 #include <SFML\Graphics.hpp>
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "Player.h"
 #include "SystemManager.h"
@@ -45,7 +47,6 @@ struct Gamestate
 	SystemManager systemManager;
 
 	/////////////////////////////////////////////////////////////////////
-	Gamestate() {}
 	~Gamestate();
 
 	void SetupGame(vec2 windowSize);
@@ -57,6 +58,10 @@ private:
 	void SetupBullets(vec2 windowSize);
 	
 	void SetupObstacles();
+
+	void LoadLevel();
+
+	void CreateCircleObstacle(std::vector<std::string> lineData);
 
 	void SetupEnemies(vec2 windowSize);
 

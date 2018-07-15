@@ -40,11 +40,6 @@ void Update(Gamestate* gameState, float dt)
 		e.DetectCollisions(gameState->mEnemies, gameState->mObstacles, gameState->mBullets, dt);
 	}
 
-	// Update moving obstacles
-	// TODO - tidy
-	RectangleObstacle* rectObs = dynamic_cast<RectangleObstacle*>(gameState->mObstacles[1]);
-	rectObs->Update(dt, sWindowSize);
-
 	// Update systems
 	gameState->systemManager.Update(gameState->mEnemies, dt);
 

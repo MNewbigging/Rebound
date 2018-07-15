@@ -1,21 +1,3 @@
-﻿  Obstacles.cpp
-  EnemyWaveSystem.cpp
-  Enemies.cpp
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(66): error C3861: 'CircleToCircleIntersection': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(69): error C3861: 'Normalize': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(79): error C3861: 'LengthSq': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(89): error C3861: 'LineToCircleIntersection': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(95): error C3861: 'Normalize': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(102): error C3861: 'LineToCircleIntersection': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(108): error C3861: 'Normalize': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(122): error C3861: 'CircleToCircleIntersection': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(145): error C3861: 'CircleToCircleIntersection': identifier not found
-c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemies.cpp(148): error C3861: 'Normalize': identifier not found
-  Bullets.cpp
-  Generating Code...
-  Compiling...
-  main.cpp
-  Gamestate.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Player.cpp
+﻿  Gamestate.cpp
+  MuckAround.vcxproj -> C:\Users\mrnew\Documents\GitHub\Rebound\MuckAround\Debug\MuckAround.exe
+  MuckAround.vcxproj -> C:\Users\mrnew\Documents\GitHub\Rebound\MuckAround\Debug\MuckAround.pdb (Partial PDB)

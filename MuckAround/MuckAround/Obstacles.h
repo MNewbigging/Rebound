@@ -26,8 +26,6 @@ public:
 	float mRadius = 0.0f;
 
 	/////////////////////////////////////////////////////////////////////
-	CircleObstacle() {}
-	~CircleObstacle() {}
 
 	virtual void Render(sf::RenderWindow* renderWin);
 	
@@ -37,19 +35,17 @@ class RectangleObstacle : public Obstacle
 {
 public:
 	
-	float mRot;
+	float mRot = 0.0f;
 
-	vec2 mSize;
+	vec2 mSize = vec2(0.0f, 0.0f);
 
 	std::vector<vec2> mVertices;
 
-	bool goingLeft;
+	bool goingLeft = false;
 
-	float speed;
+	float mSpeed = 15.0f;
 
 	/////////////////////////////////////////////////////////////////////
-	RectangleObstacle();
-	~RectangleObstacle() {}
 
 	void Update(float dt, vec2 winSize);
 

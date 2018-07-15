@@ -18,9 +18,6 @@ public:
 	vec2 windowSize = vec2(0.0f, 0.0f);
 
 	/////////////////////////////////////////////////////////////////////////////////
-	EnemyWaveSystem() {}
-	~EnemyWaveSystem() {}
-
 
 	void Update(std::vector<Enemy> &enemies, float dt);
 

@@ -8,8 +8,6 @@ struct Resources
 	sf::Texture mPlayerTex;
 
 	////////////////////////////////////////////////////////////////////
-	Resources() {}
-	~Resources() {}
 
 	bool LoadResources();
 };

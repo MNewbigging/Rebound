@@ -28,8 +28,6 @@ public:
 	float mBounceCooldown = 0.0f;
 	float mMaxBounceCooldown = 0.1f;
 	//////////////////////////////////////////////////////////////////////////////
-	Bullet() {}
-	~Bullet() {}
 
 	void Update(float dt);
 
