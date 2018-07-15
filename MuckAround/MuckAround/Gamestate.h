@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Obstacles.h"
 #include "Enemies.h"
-#include "EnemyWaveSystem.h"
+#include "SystemManager.h"
 
 
 typedef sf::Vector2f vec2;
@@ -39,13 +39,12 @@ struct Gamestate
 
 	// Game objects
 	Player mPlayer;
-	static std::vector<Enemy> mEnemies;
+	std::vector<Enemy> mEnemies;
     std::vector<Bullet> mBullets;
 	std::vector<Obstacle*> mObstacles;
 
 	// Systems
-	friend class EnemyWaveSystem;
-	EnemyWaveSystem sysEnemyWave;
+	SystemManager systemManager;
 
 	/////////////////////////////////////////////////////////////////////
 	
@@ -146,6 +145,7 @@ private:
 
 	void SetupSystems(vec2 windowSize)
 	{
-		sysEnemyWave.windowSize = windowSize;
+		systemManager.enemyWave.windowSize = windowSize;
 	}
+
 };

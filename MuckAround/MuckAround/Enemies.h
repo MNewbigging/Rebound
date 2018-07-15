@@ -3,12 +3,15 @@
 #include <SFML\Graphics.hpp>
 #include "Entity.h"
 
+
+
 typedef sf::Vector2f vec2;
+
+
 
 class Enemy : public Entity
 {
 public:
-		
 	vec2 mEnemyPoolPos  = vec2(0.0f, 0.0f);
 
 	bool mActive		= false;
@@ -95,7 +98,7 @@ public:
 		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
 		{
 			// Iterate over rect vertices to find which side might be intersecting player 
-			for (int i = 0; i < rectObs->mVertices.size(); i++)
+			for (int i = 0; i < (int)rectObs->mVertices.size(); i++)
 			{
 				// Find the closest point on line to circle (if there's an intersection)
 				vec2 point = vec2(0.0f, 0.0f);

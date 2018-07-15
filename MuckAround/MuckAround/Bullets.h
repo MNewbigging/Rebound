@@ -26,7 +26,7 @@ public:
 	float mDamage		 = 25.0f;
 	// Enforce cooldown on rebounding (so as not to proc col res more than once per bounce)
 	float mCanBounce	  = 0.0f;
-	float mBounceCooldown = 0.1;
+	float mBounceCooldown = 0.1f;
 	//////////////////////////////////////////////////////////////////////////////
 
 	// Update position, reset to bullet pool if life ended
@@ -165,7 +165,7 @@ public:
 		if (LengthSq(d) < 2 * LengthSq(rectObs->mSize) && mCanBounce <= 0)
 		{
 			// Iterate over rect vertices to find which side might be intersecting player 
-			for (int i = 0; i < rectObs->mVertices.size(); i++)
+			for (int i = 0; i < (int)rectObs->mVertices.size(); i++)
 			{
 				// Find the closest point on line to circle (if there's an intersection)
 				vec2 point = vec2(0.0f, 0.0f);

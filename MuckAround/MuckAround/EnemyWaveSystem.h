@@ -1,38 +1,37 @@
 #pragma once
 
-#include "Enemies.h"
+
 #include <vector>
 #include <random>
 
+
+
 typedef sf::Vector2f vec2;
+
+
 
 class EnemyWaveSystem
 {
 public:
 	
-	int mTotalEnemiesInWave		   = 1;
-	int mEnemiesLeftInWave         = 0;
+	int mTotalEnemiesInWave		   = 3;
+	int mEnemiesLeftInWave		   = 0;
 	float mWaveDelayTimer	       = 0.0f;
 	const float mMaxWaveDelayTimer = 10.0f;
 	vec2 windowSize			       = vec2(0.0f, 0.0f);
 
+	
 
 	/////////////////////////////////////////////////////////////////////////////////
 
-	EnemyWaveSystem() {}
-
-	~EnemyWaveSystem() {}
-
-
-	void Update(float dt) 
+	void Update(std::vector<Enemy> &enemies, float dt) 
 	{
-		mEnemiesLeftInWave = mTotalEnemiesInWave;
 		// Check if this wave has finished
 		// TODO - find a way to do this without calling every frame
-		// TODO - refactor this horrible code
+		mEnemiesLeftInWave = mTotalEnemiesInWave;
 		for (int i = 0; i < mTotalEnemiesInWave; i++)
 		{
-			if (!Gamestate::mEnemies[i].mActive)
+			if (!enemies[i].mActive)
 			{
 				mEnemiesLeftInWave--;
 			}
@@ -44,18 +43,17 @@ public:
 			// Check if next wave should start
 			if (mWaveDelayTimer <= 0)
 			{
-				BeginNextWave();
+				BeginNextWave(enemies);
 			}
 		}
 	}
 
-	void BeginNextWave()
+	void BeginNextWave(std::vector<Enemy> &enemies)
 	{
 		// Setup random generators
 		std::uniform_real_distribution<float> distroX(0, windowSize.x);
 		std::uniform_real_distribution<float> distroY(0, windowSize.y);
-		std::random_device rd;
-		std::default_random_engine rng( rd() );
+
 		// Reset wave vars
 		mEnemiesLeftInWave = mTotalEnemiesInWave;
 		mWaveDelayTimer = 10.0f;
@@ -63,6 +61,9 @@ public:
 		// Iterate through list of enemies in pool, up to wave total
 		for (int i = 0; i < mTotalEnemiesInWave; i++)
 		{
+			std::random_device rd;
+			std::default_random_engine rng(rd());
+
 			// 1 - find random point within screen
 			vec2 rnd = (windowSize * 0.5f) - vec2(distroX(rng), distroY(rng));
 			// 2 - Move it offscreen depending on quadrant
@@ -75,9 +76,9 @@ public:
 			else
 				rnd.y -= (windowSize.y * 0.5f);
 			// 3 - assign to this enemy
-			Gamestate::mEnemies[i].mPos = rnd;
+			enemies[i].mPos = rnd;
 			// Activate this enemy
-			Gamestate::mEnemies[i].mActive = true;
+			enemies[i].mActive = true;
 		}
 	}
 };

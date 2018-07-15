@@ -46,7 +46,7 @@ void Update(Gamestate* gameState, float dt)
 	rectObs->Update(dt, sWindowSize);
 
 	// Update systems
-	gameState->sysEnemyWave.Update(dt);
+	gameState->systemManager.Update(gameState->mEnemies, dt);
 
 }
 
