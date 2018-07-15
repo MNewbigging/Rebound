@@ -1,6 +1,6 @@
 #include "Enemies.h"
 
-using namespace HelperFunctions;
+namespace hf = HelperFunctions;
 
 // Track player
 void Enemy::Update(vec2 playerPos, float dt)
@@ -8,7 +8,7 @@ void Enemy::Update(vec2 playerPos, float dt)
 	if (mActive)
 	{
 		// Move towards player
-		mVelocity = Normalize(playerPos - mPos) * mSpeed;
+		mVelocity = hf::Normalize(playerPos - mPos) * mSpeed;
 		mPos += mVelocity * dt;
 
 		// Change color back to normal
@@ -63,10 +63,10 @@ void Enemy::DetectCollisions(std::vector<Enemy> enemies, std::vector<Obstacle*> 
 
 void Enemy::CheckAgainstCircleObstacle(CircleObstacle* circleObs, float dt)
 {
-	if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+	if (hf::CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
 	{
 		// Find collision normal
-		vec2 colNormal = Normalize(circleObs->mPos - mPos);
+		vec2 colNormal = hf::Normalize(circleObs->mPos - mPos);
 		// Move back based on normal by speed
 		mPos -= colNormal * mSpeed * dt;
 	}
@@ -76,7 +76,7 @@ void Enemy::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
 {
 	// Basic distance check - only perform actual collision checks if close enough
 	vec2 d = rectObs->mPos - mPos;
-	if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
+	if (hf::LengthSq(d) < 2 * hf::LengthSq(rectObs->mSize))
 	{
 		// Iterate over rect vertices to find which side might be intersecting player 
 		for (int i = 0; i < (int)rectObs->mVertices.size(); i++)
@@ -86,26 +86,26 @@ void Enemy::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
 			// Wrap around: 3-0
 			if (i == 3)
 			{
-				if (LineToCircleIntersection(rectObs->mVertices[i],
+				if (hf::LineToCircleIntersection(rectObs->mVertices[i],
 					rectObs->mVertices[0],
 					mPos, mRadius,
 					point))
 				{
 					// Find collision normal
-					vec2 colNormal = Normalize(point - mPos);
+					vec2 colNormal = hf::Normalize(point - mPos);
 					// Move enemy back along collision normal
 					mPos -= colNormal * mSpeed * dt;
 				}
 				break;
 			}
 			// 0-1, 1-2, 2-3
-			if (LineToCircleIntersection(rectObs->mVertices[i],
+			if (hf::LineToCircleIntersection(rectObs->mVertices[i],
 				rectObs->mVertices[i + 1],
 				mPos, mRadius,
 				point))
 			{
 				// Find collision normal
-				vec2 colNormal = Normalize(point - mPos);
+				vec2 colNormal = hf::Normalize(point - mPos);
 				// Move enemy back along collision normal
 				mPos -= colNormal * mSpeed * dt;
 			}
@@ -119,7 +119,7 @@ void Enemy::CheckAgainstBullets(std::vector<Bullet> &bullets)
 	// Check against bullets
 	for (auto &b : bullets)
 	{
-		if (b.mCanDamage && CircleToCircleIntersection(mPos, b.mPos, mRadius, b.mRadius))
+		if (b.mCanDamage && hf::CircleToCircleIntersection(mPos, b.mPos, mRadius, b.mRadius))
 		{
 			// Remove as much health as bullet damage
 			mHealth -= b.mDamage;
@@ -142,10 +142,10 @@ void Enemy::CheckAgainstEnemies(std::vector<Enemy> enemies, float dt)
 	{
 		if (e.mPos != mPos)
 		{
-			if (CircleToCircleIntersection(mPos, e.mPos, mRadius, e.mRadius))
+			if (hf::CircleToCircleIntersection(mPos, e.mPos, mRadius, e.mRadius))
 			{
 				// Find collision normal
-				vec2 colNormal = Normalize(e.mPos - mPos);
+				vec2 colNormal = hf::Normalize(e.mPos - mPos);
 				// Move back based on normal by speed
 				mPos -= colNormal * mSpeed * dt;
 			}

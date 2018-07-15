@@ -1,7 +1,6 @@
 #include "Bullets.h"
 
-using namespace HelperFunctions;
-
+namespace hf = HelperFunctions;
 
 void Bullet::Update(float dt)
 {
@@ -80,7 +79,7 @@ void Bullet::CheckAgainstWindow(vec2 winSize)
 		// Normal points to left
 		vec2 colNormal = vec2(-1.0f, 0.0f);
 		// Reflect
-		mVelocity = Reflect(mVelocity, colNormal);
+		mVelocity = hf::Reflect(mVelocity, colNormal);
 		// Bullet has collided with something
 		mCanDamage = true;
 	}
@@ -91,7 +90,7 @@ void Bullet::CheckAgainstWindow(vec2 winSize)
 		// Normal points to right
 		vec2 colNormal = vec2(1.0f, 0.0f);
 		// Reflect
-		mVelocity = Reflect(mVelocity, colNormal);
+		mVelocity = hf::Reflect(mVelocity, colNormal);
 		// Bullet has collided with something
 		mCanDamage = true;
 	}
@@ -100,7 +99,7 @@ void Bullet::CheckAgainstWindow(vec2 winSize)
 	{
 		mPos.y = (winSize.y / 2) - mRadius;
 		vec2 colNormal = vec2(0.0f, 1.0f);
-		mVelocity = Reflect(mVelocity, colNormal);
+		mVelocity = hf::Reflect(mVelocity, colNormal);
 		// Bullet has collided with something
 		mCanDamage = true;
 	}
@@ -108,7 +107,7 @@ void Bullet::CheckAgainstWindow(vec2 winSize)
 	{
 		mPos.y = -(winSize.y / 2) + mRadius;
 		vec2 colNormal = vec2(0.0f, -1.0f);
-		mVelocity = Reflect(mVelocity, colNormal);
+		mVelocity = hf::Reflect(mVelocity, colNormal);
 		// Bullet has collided with something
 		mCanDamage = true;
 	}
@@ -116,13 +115,13 @@ void Bullet::CheckAgainstWindow(vec2 winSize)
 
 void Bullet::CheckAgainstCircleObstacle(CircleObstacle* circleObs)
 {
-	if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius)
+	if (hf::CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius)
 		&& mBounceCooldown <= 0)
 	{
 		// Find collision normal
-		vec2 colNormal = Normalize(circleObs->mPos - mPos);
+		vec2 colNormal = hf::Normalize(circleObs->mPos - mPos);
 		// Reflect around this normal
-		mVelocity = Reflect(mVelocity, colNormal);
+		mVelocity = hf::Reflect(mVelocity, colNormal);
 		// Bullet has collided with something
 		mCanDamage = true;
 		// Set bounce timer
@@ -134,7 +133,7 @@ void Bullet::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs)
 {
 	// Basic distance check - only perform actual collision checks if close enough
 	vec2 d = rectObs->mPos - mPos;
-	if (LengthSq(d) < 2 * LengthSq(rectObs->mSize) && mBounceCooldown <= 0)
+	if (hf::LengthSq(d) < 2 * hf::LengthSq(rectObs->mSize) && mBounceCooldown <= 0)
 	{
 		// Iterate over rect vertices to find which side might be intersecting player 
 		for (int i = 0; i < (int)rectObs->mVertices.size(); i++)
@@ -144,15 +143,15 @@ void Bullet::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs)
 			// Wrap around: 3-0
 			if (i == 3)
 			{
-				if (LineToCircleIntersection(rectObs->mVertices[i],
+				if (hf::LineToCircleIntersection(rectObs->mVertices[i],
 					rectObs->mVertices[0],
 					mPos, mRadius,
 					point))
 				{
 					// Find collision normal
-					vec2 colNormal = Normalize(point - mPos);
+					vec2 colNormal = hf::Normalize(point - mPos);
 					// Reflect around this normal
-					mVelocity = Reflect(mVelocity, colNormal);
+					mVelocity = hf::Reflect(mVelocity, colNormal);
 					// Bullet has collided with something
 					mCanDamage = true;
 					// Reset bounce cooldown
@@ -161,15 +160,15 @@ void Bullet::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs)
 				break;
 			}
 			// 0-1, 1-2, 2-3
-			if (LineToCircleIntersection(rectObs->mVertices[i],
+			if (hf::LineToCircleIntersection(rectObs->mVertices[i],
 				rectObs->mVertices[i + 1],
 				mPos, mRadius,
 				point))
 			{
 				// Find collision normal
-				vec2 colNormal = Normalize(point - mPos);
+				vec2 colNormal = hf::Normalize(point - mPos);
 				// Reflect around this normal
-				mVelocity = Reflect(mVelocity, colNormal);
+				mVelocity = hf::Reflect(mVelocity, colNormal);
 				// Bullet has collided with something
 				mCanDamage = true;
 				// Reset bounce cooldown

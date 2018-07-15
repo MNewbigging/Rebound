@@ -1,6 +1,7 @@
 #include "Player.h"
 
-using namespace HelperFunctions;
+namespace hf = HelperFunctions;
+
 // Handles movement, firing bullets
 // TODO - separate into more functions
 void Player::Update(std::vector<Bullet> &bullets, float dt)
@@ -28,9 +29,9 @@ void Player::Update(std::vector<Bullet> &bullets, float dt)
 	}
 
 	// Ensure the player doesn't go faster diagonally
-	if (LengthSq(mVelocity) > 1.0f)
+	if (hf::LengthSq(mVelocity) > 1.0f)
 	{
-		mVelocity = Normalize(mVelocity);
+		mVelocity = hf::Normalize(mVelocity);
 	}
 
 	// Update position based on velocity, speed, delta time
@@ -38,7 +39,7 @@ void Player::Update(std::vector<Bullet> &bullets, float dt)
 
 	// Rotate player to face mouse
 	vec2 playerToMouse = mMousePos - mPos;
-	mFacingDir = Normalize(playerToMouse);
+	mFacingDir = hf::Normalize(playerToMouse);
 
 	// Firing
 	mBulletFireCooldown -= dt;
@@ -132,10 +133,10 @@ void Player::CheckAgainstWindow(vec2 winSize)
 
 void Player::CheckAgainstCircleObstacle(CircleObstacle* circleObs, float dt)
 {
-	if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
+	if (hf::CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
 	{
 		// Find collision normal
-		vec2 colNormal = Normalize(circleObs->mPos - mPos);
+		vec2 colNormal = hf::Normalize(circleObs->mPos - mPos);
 		// Move back based on normal by speed
 		// Essentially the reverse of how we got here
 		mPos -= colNormal * mSpeed * dt;
@@ -146,7 +147,7 @@ void Player::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
 {
 	// Basic distance check - only perform actual collision checks if close enough
 	vec2 d = rectObs->mPos - mPos;
-	if (LengthSq(d) < 2 * LengthSq(rectObs->mSize))
+	if (hf::LengthSq(d) < 2 * hf::LengthSq(rectObs->mSize))
 	{
 		// Iterate over rect vertices to find which side might be intersecting player 
 		for (int i = 0; i < (int)rectObs->mVertices.size(); i++)
@@ -156,26 +157,26 @@ void Player::CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
 			// Wrap around: 3-0
 			if (i == 3)
 			{
-				if (LineToCircleIntersection(rectObs->mVertices[i],
+				if (hf::LineToCircleIntersection(rectObs->mVertices[i],
 					rectObs->mVertices[0],
 					mPos, mRadius,
 					point))
 				{
 					// Find collision normal
-					vec2 colNormal = Normalize(point - mPos);
+					vec2 colNormal = hf::Normalize(point - mPos);
 					// Move player back along collision normal
 					mPos -= colNormal * mSpeed * dt;
 				}
 				break;
 			}
 			// 0-1, 1-2, 2-3
-			if (LineToCircleIntersection(rectObs->mVertices[i],
+			if (hf::LineToCircleIntersection(rectObs->mVertices[i],
 				rectObs->mVertices[i + 1],
 				mPos, mRadius,
 				point))
 			{
 				// Find collision normal
-				vec2 colNormal = Normalize(point - mPos);
+				vec2 colNormal = hf::Normalize(point - mPos);
 				// Move player back along collision normal
 				mPos -= colNormal * mSpeed * dt;
 			}
@@ -196,7 +197,7 @@ void Player::Render(sf::RenderWindow* renderWin, Resources* resources)
 	playerSprite.setPosition(mPos);
 
 	// Set rotation
-	playerSprite.setRotation(RadiansToDegrees(ToAngle(mFacingDir)));
+	playerSprite.setRotation(hf::RadiansToDegrees(hf::ToAngle(mFacingDir)));
 
 	// Draw
 	renderWin->draw(playerSprite);
