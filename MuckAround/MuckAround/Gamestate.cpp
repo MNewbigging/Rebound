@@ -92,6 +92,7 @@ void Gamestate::LoadLevel()
 			lines.push_back(line);
 		}
 	}
+
 	// Parse the level file lines; create obstacles
 	for (auto line : lines)
 	{
@@ -123,7 +124,24 @@ void Gamestate::LoadLevel()
 			mObstacles.push_back(circleObs);
 			break;
 		}
-
+		// Rectangle obstacle
+		case 2:
+		{
+			RectangleObstacle* rectObs = new RectangleObstacle();
+			// Second substr is position
+			rectObs->mPos = ParseVec2(lineData[1]);
+			// Third substr is size
+			rectObs->mSize = ParseVec2(lineData[2]);
+			// Fourth substr is rotation
+			rectObs->mRot = ParseFloat(lineData[3]);
+			// Final substr is color
+			rectObs->mColour = ParseColour(lineData[4]);
+			// Init vertices for this rect
+			rectObs->FindVertices();
+			// Add to list
+			mObstacles.push_back(rectObs);
+			break;
+		}
 		default:
 			break;
 		}
