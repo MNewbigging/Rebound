@@ -2,12 +2,10 @@
 
 #include <SFML\Graphics.hpp>
 #include "Entity.h"
-
+#include "EnemyWaveSystem.h"
 
 
 typedef sf::Vector2f vec2;
-
-
 
 class Enemy : public Entity
 {
@@ -44,7 +42,7 @@ public:
 		mActive = false;
 	}
 
-	void DetectCollisions(std::vector<Obstacle*> obstacles, std::vector<Bullet> &bullets, float dt)
+	void DetectCollisions(std::vector<Enemy> enemies, std::vector<Obstacle*> obstacles, std::vector<Bullet> &bullets, float dt)
 	{
 		// Check against obstacles
 		for (auto &obs : obstacles)
@@ -75,10 +73,12 @@ public:
 		}
 
 		// Check against bullets
-		CheckAgainstBullets(bullets);
+		CheckAgainstBullets(bullets); 
+
+		// Check againt other enemies
+		CheckAgainstEnemies(enemies, dt);
 	}
 
-	// Collision detection/resolution against circle obstacles
 	void CheckAgainstCircleObstacle(CircleObstacle* circleObs, float dt)
 	{
 		if (CircleToCircleIntersection(mPos, circleObs->mPos, mRadius, circleObs->mRadius))
@@ -89,8 +89,7 @@ public:
 			mPos -= colNormal * mSpeed * dt;
 		}
 	}
-	
-	// Collision detection/resolution against rectangle obstacles
+		
 	void CheckAgainstRectangleObstacle(RectangleObstacle* rectObs, float dt)
 	{
 		// Basic distance check - only perform actual collision checks if close enough
@@ -133,7 +132,6 @@ public:
 		}
 	}
 
-	// Collision detection/resolution against bullets
 	void CheckAgainstBullets(std::vector<Bullet> &bullets)
 	{
 		// Check against bullets
@@ -156,7 +154,22 @@ public:
 		}
 	}
 	
-	// Collision detection/resolution against the player
+	void CheckAgainstEnemies(std::vector<Enemy> enemies, float dt)
+	{
+		for (auto &e : enemies)
+		{
+			if (e.mPos != mPos)
+			{
+				if (CircleToCircleIntersection(mPos, e.mPos, mRadius, e.mRadius))
+				{
+					// Find collision normal
+					vec2 colNormal = Normalize(e.mPos - mPos);
+					// Move back based on normal by speed
+					mPos -= colNormal * mSpeed * dt;
+				}
+			}
+		}
+	}
 
 
 	void Render(sf::RenderWindow* renderWin)

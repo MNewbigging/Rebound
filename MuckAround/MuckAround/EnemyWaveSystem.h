@@ -1,16 +1,13 @@
 #pragma once
 
-
 #include <vector>
 #include <random>
-
+#include "Enemies.h"
 
 
 typedef sf::Vector2f vec2;
 
-
-
-class EnemyWaveSystem
+class EnemyWaveSystem 
 {
 public:
 	

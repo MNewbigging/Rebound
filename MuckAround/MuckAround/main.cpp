@@ -33,11 +33,11 @@ void Update(Gamestate* gameState, float dt)
 		b.DetectCollisions(gameState->mObstacles, sWindowSize);
 	}
 
-	// Update basic enemies
-	for (auto &be : gameState->mEnemies)
+	// Update enemies
+	for (auto &e : gameState->mEnemies)
 	{
-		be.Update(gameState->mPlayer.mPos, dt);
-		be.DetectCollisions(gameState->mObstacles, gameState->mBullets, dt);
+		e.Update(gameState->mPlayer.mPos, dt);
+		e.DetectCollisions(gameState->mEnemies, gameState->mObstacles, gameState->mBullets, dt);
 	}
 
 	// Update moving obstacles

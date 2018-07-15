@@ -1,3 +1,27 @@
 ﻿  main.cpp
-  MuckAround.vcxproj -> C:\Users\mrnew\Documents\GitHub\Rebound\MuckAround\Debug\MuckAround.exe
-  MuckAround.vcxproj -> C:\Users\mrnew\Documents\GitHub\Rebound\MuckAround\Debug\MuckAround.pdb (Partial PDB)
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(24): error C2065: 'Enemy': undeclared identifier
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(24): error C2923: 'std::vector': 'Enemy' is not a valid template type argument for parameter '_Ty'
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(24): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(48): error C2065: 'Enemy': undeclared identifier
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(48): error C2923: 'std::vector': 'Enemy' is not a valid template type argument for parameter '_Ty'
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(48): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(31): error C2678: binary '[': no operator found which takes a left-hand operand of type 'std::vector' (or there is no acceptable conversion)
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\vector(1805): note: could be 'const _Ty &std::vector<_Ty,_Alloc>::operator [](const _Vector_alloc<_Alloc_types>::_Val_types::size_type) const'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\vector(1791): note: or       '_Ty &std::vector<_Ty,_Alloc>::operator [](const _Vector_alloc<_Alloc_types>::_Val_types::size_type)'
+  c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(31): note: while trying to match the argument list '(std::vector, int)'
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(31): error C2228: left of '.mActive' must have class/struct/union
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(76): error C2678: binary '[': no operator found which takes a left-hand operand of type 'std::vector' (or there is no acceptable conversion)
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\vector(1805): note: could be 'const _Ty &std::vector<_Ty,_Alloc>::operator [](const _Vector_alloc<_Alloc_types>::_Val_types::size_type) const'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\vector(1791): note: or       '_Ty &std::vector<_Ty,_Alloc>::operator [](const _Vector_alloc<_Alloc_types>::_Val_types::size_type)'
+  c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(76): note: while trying to match the argument list '(std::vector, int)'
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(76): error C2228: left of '.mPos' must have class/struct/union
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(78): error C2678: binary '[': no operator found which takes a left-hand operand of type 'std::vector' (or there is no acceptable conversion)
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\vector(1805): note: could be 'const _Ty &std::vector<_Ty,_Alloc>::operator [](const _Vector_alloc<_Alloc_types>::_Val_types::size_type) const'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\vector(1791): note: or       '_Ty &std::vector<_Ty,_Alloc>::operator [](const _Vector_alloc<_Alloc_types>::_Val_types::size_type)'
+  c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(78): note: while trying to match the argument list '(std::vector, int)'
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\enemywavesystem.h(78): error C2228: left of '.mActive' must have class/struct/union
+c:\users\mrnew\documents\github\rebound\muckaround\muckaround\systemmanager.h(14): error C2664: 'void EnemyWaveSystem::Update(std::vector &,float)': cannot convert argument 1 from 'std::vector<Enemy,std::allocator<_Ty>>' to 'std::vector &'
+          with
+          [
+              _Ty=Enemy
+          ]
