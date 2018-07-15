@@ -2,13 +2,6 @@
 
 using namespace HelperFunctions;
 
-Enemy::Enemy()
-{
-	mEnemyPoolPos = vec2(0.0f, 0.0f);
-	mActive = false;
-}
-
-
 // Track player
 void Enemy::Update(vec2 playerPos, float dt)
 {

@@ -1,10 +1,5 @@
 #include "Obstacles.h"
 
-CircleObstacle::CircleObstacle()
-{
-	mRadius = 0.0f;
-}
-
 void CircleObstacle::Render(sf::RenderWindow* renderWin)
 {
 

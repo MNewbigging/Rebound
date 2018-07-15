@@ -2,16 +2,6 @@
 
 using namespace HelperFunctions;
 
-Bullet::Bullet()
-{
-	mActive = false;
-	mCanDamage = false;
-	mBulletPoolPos = vec2(0.0f, 0.0f);
-	mLifetime = 0.0f;
-	mDamage = 25.0f;
-	mBounceCooldown = 0.0f;
-	mMaxBounceCooldown = 0.1f;
-}
 
 void Bullet::Update(float dt)
 {

@@ -13,14 +13,14 @@ typedef sf::Vector2f vec2;
 class Enemy : public Entity
 {
 public:
-	vec2 mEnemyPoolPos;
-	bool mActive;
+	vec2 mEnemyPoolPos = vec2(0.0f, 0.0f);
+	bool mActive = false;
 	sf::Color mColor;
 	sf::Color mNormalColor;
 	sf::Color mHitColor;
 
 	//////////////////////////////////////////////////////////////////////////////
-	Enemy();
+	Enemy() {}
 	~Enemy() {}
 
 	void Update(vec2 playerPos, float dt);

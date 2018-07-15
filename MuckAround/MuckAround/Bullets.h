@@ -15,20 +15,20 @@ class Bullet : public Entity
 {
 public:
 	// Has bullet been fired
-	bool mActive;
+	bool mActive = false;
 	// Has bullet collided with surface
-	bool mCanDamage;
+	bool mCanDamage = false;
 	// Off screen position whilst inactive
-	vec2 mBulletPoolPos;
+	vec2 mBulletPoolPos = vec2(0.0f, 0.0f);
 	// Bullet decay
-	float mLifetime;
+	float mLifetime = 0.0f;
 	// Bullet damage
-	float mDamage;
+	float mDamage = 25.0f;
 	// Enforce cooldown on rebounding (so as not to proc col res more than once per bounce)
-	float mBounceCooldown;
-	float mMaxBounceCooldown;
+	float mBounceCooldown = 0.0f;
+	float mMaxBounceCooldown = 0.1f;
 	//////////////////////////////////////////////////////////////////////////////
-	Bullet();
+	Bullet() {}
 	~Bullet() {}
 
 	void Update(float dt);

@@ -11,14 +11,14 @@ class EnemyWaveSystem
 {
 public:
 	
-	int mTotalEnemiesInWave;
-	int mEnemiesLeftInWave;
-	float mWaveDelayTimer;
+	int mTotalEnemiesInWave = 3;
+	int mEnemiesLeftInWave = 0;
+	float mWaveDelayTimer = 0.0f;
 	const float mMaxWaveDelayTimer = 10.0f;
-	vec2 windowSize;
+	vec2 windowSize = vec2(0.0f, 0.0f);
 
 	/////////////////////////////////////////////////////////////////////////////////
-	EnemyWaveSystem();
+	EnemyWaveSystem() {}
 	~EnemyWaveSystem() {}
 
 

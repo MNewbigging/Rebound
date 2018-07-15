@@ -1,13 +1,5 @@
 #include "EnemyWaveSystem.h"
 
-EnemyWaveSystem::EnemyWaveSystem()
-{
-	mTotalEnemiesInWave = 3;
-	mEnemiesLeftInWave = 0;
-	mWaveDelayTimer = 0.0f;
-	windowSize = vec2(0.0f, 0.0f);
-}
-
 void EnemyWaveSystem::Update(std::vector<Enemy> &enemies, float dt)
 {
 	// Check if this wave has finished

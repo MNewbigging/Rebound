@@ -23,10 +23,10 @@ class CircleObstacle : public Obstacle
 {
 public:
 
-	float mRadius;
+	float mRadius = 0.0f;
 
 	/////////////////////////////////////////////////////////////////////
-	CircleObstacle();
+	CircleObstacle() {}
 	~CircleObstacle() {}
 
 	virtual void Render(sf::RenderWindow* renderWin);
