@@ -7,14 +7,10 @@ struct Resources
 {
 	sf::Texture mPlayerTex;
 
+	////////////////////////////////////////////////////////////////////
+	Resources() {}
+	~Resources() {}
 
-	bool LoadResources()
-	{
-		bool loaded = true;
-
-		loaded &= mPlayerTex.loadFromFile("assets/player.png");
-
-		return loaded;
-	}
+	bool LoadResources();
 };
 

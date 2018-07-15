@@ -155,7 +155,6 @@
     <ClInclude Include="Bullets.h" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="EnemyWaveSystem.h" />
-    <ClInclude Include="EnemyWaveSystemInterface.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="HelperFunctions.h" />
@@ -167,7 +166,15 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bullets.cpp" />
+    <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="EnemyWaveSystem.cpp" />
+    <ClCompile Include="Gamestate.cpp" />
+    <ClCompile Include="HelperFunctions.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Obstacles.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Resources.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
